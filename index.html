@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperNova - Advanced AI Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="nova.png" type="image/png">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen">
+        <img src="nova.png" alt="SuperNova Logo" class="splash-logo">
+        <div class="splash-progress"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="nova.png" alt="SuperNova" class="sidebar-logo">
+                <h2>SuperNova</h2>
+                <button class="close-sidebar" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Auth Section -->
+                <div class="auth-section" id="authSection">
+                    <button class="auth-btn" id="loginBtn">Sign In</button>
+                    <button class="auth-btn secondary" id="registerBtn">Sign Up</button>
+                </div>
+                
+                <!-- Profile Section -->
+                <div class="profile-section hidden" id="profileSection">
+                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <div class="profile-info">
+                        <span class="profile-name" id="profileName">User</span>
+                        <span class="profile-email" id="profileEmail">user@example.com</span>
+                    </div>
+                </div>
+                
+                <!-- Settings Menu -->
+                <div class="settings-menu">
+                    <div class="menu-section">
+                        <h3>Preferences</h3>
+                        <div class="menu-item theme-toggle">
+                            <i class="fas fa-moon"></i>
+                            <span>Dark Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="themeToggle" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="menu-item">
+                            <i class="fas fa-language"></i>
+                            <span>Language</span>
+                            <select id="languageSelect">
+                                <option value="en">English</option>
+                                <option value="id">Bahasa Indonesia</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Model</span>
+                            <select id="modelSelect">
+                                <option value="supernova">SuperNova</option>
+                                <option value="gpt4" disabled>GPT-4o (Coming Soon)</option>
+                                <option value="claude" disabled>Claude (Coming Soon)</option>
+                                <option value="gemini" disabled>Gemini (Coming Soon)</option>
+                                <option value="deepseek" disabled>Deepseek R1 (Coming Soon)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <h3>Account</h3>
+                        <div class="menu-item" id="privacyBtn">
+                            <i class="fas fa-lock"></i>
+                            <span>Privacy</span>
+                        </div>
+                        <div class="menu-item" id="dataControlBtn">
+                            <i class="fas fa-database"></i>
+                            <span>Data Control</span>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-section">
+                        <h3>About</h3>
+                        <div class="menu-item" id="aboutBtn">
+                            <i class="fas fa-info-circle"></i>
+                            <span>About SuperNova</span>
+                        </div>
+                        <div class="menu-item" id="termsBtn">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Terms & Conditions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>SuperNova AI © 2023</p>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="header-left">
+                    <h1>SuperNova</h1>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" id="sidebarToggle">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        <p>Hello! I'm SuperNova, your advanced AI assistant. How can I help you today?</p>
+                    </div>
+                    <div class="message-time">12:30 PM</div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input">
+                <button class="icon-btn voice-btn" id="voiceBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="input-container">
+                    <textarea id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
+                </div>
+                <button class="icon-btn send-btn" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Overlay -->
+    <div class="modal-overlay hidden" id="modalOverlay"></div>
+    
+    <!-- Privacy Modal -->
+    <div class="modal hidden" id="privacyModal">
+        <div class="modal-header">
+            <h2>Privacy Policy</h2>
+            <button class="close-modal" id="closePrivacyModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <p>SuperNova is committed to protecting your privacy. We collect minimal data necessary to provide our services and improve your experience.</p>
+            <h3>Data Collection</h3>
+            <p>We collect:</p>
+            <ul>
+                <li>Messages you send to process responses</li>
+                <li>Account information if you register</li>
+                <li>Usage data to improve our service</li>
+            </ul>
+            <h3>Data Usage</h3>
+            <p>Your data is used to:</p>
+            <ul>
+                <li>Provide and maintain our service</li>
+                <li>Improve and personalize your experience</li>
+                <li>Develop new features</li>
+            </ul>
+            <h3>Data Protection</h3>
+            <p>We implement industry-standard security measures to protect your data.</p>
+        </div>
+    </div>
+    
+    <!-- Data Control Modal -->
+    <div class="modal hidden" id="dataControlModal">
+        <div class="modal-header">
+            <h2>Data Control</h2>
+            <button class="close-modal" id="closeDataControlModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <div class="data-control-option">
+                <h3>Delete Chat History</h3>
+                <p>Permanently remove all your conversation history with SuperNova.</p>
+                <button class="danger-btn" id="deleteChatsBtn">Delete All Chats</button>
+            </div>
+            <div class="data-control-option">
+                <h3>Delete Account</h3>
+                <p>Permanently remove your account and all associated data.</p>
+                <button class="danger-btn" id="deleteAccountBtn">Delete Account</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Modal -->
+    <div class="modal hidden" id="aboutModal">
+        <div class="modal-header">
+            <h2>About SuperNova</h2>
+            <button class="close-modal" id="closeAboutModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <div class="about-logo">
+                <img src="nova.png" alt="SuperNova">
+            </div>
+            <p>SuperNova is an advanced AI chatbot designed to provide intelligent, context-aware responses to your queries.</p>
+            <p>Version: 1.0.0</p>
+            <p>Developed with cutting-edge AI technology to deliver the best conversational experience.</p>
+            <div class="tech-stack">
+                <h3>Technology Stack</h3>
+                <div class="tech-icons">
+                    <div class="tech-icon">
+                        <i class="fas fa-robot"></i>
+                        <span>Cohere API</span>
+                    </div>
+                    <div class="tech-icon">
+                        <i class="fab fa-js"></i>
+                        <span>JavaScript</span>
+                    </div>
+                    <div class="tech-icon">
+                        <i class="fab fa-html5"></i>
+                        <span>HTML5</span>
+                    </div>
+                    <div class="tech-icon">
+                        <i class="fab fa-css3-alt"></i>
+                        <span>CSS3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terms Modal -->
+    <div class="modal hidden" id="termsModal">
+        <div class="modal-header">
+            <h2>Terms & Conditions</h2>
+            <button class="close-modal" id="closeTermsModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <h3>1. Acceptance of Terms</h3>
+            <p>By using SuperNova, you agree to these terms and conditions.</p>
+            
+            <h3>2. Service Description</h3>
+            <p>SuperNova provides AI-powered conversational services. The service may change without notice.</p>
+            
+            <h3>3. User Responsibilities</h3>
+            <p>You agree not to use SuperNova for any illegal or harmful purposes.</p>
+            
+            <h3>4. Privacy</h3>
+            <p>Your use of SuperNova is subject to our Privacy Policy.</p>
+            
+            <h3>5. Limitation of Liability</h3>
+            <p>SuperNova is not liable for any damages resulting from use of the service.</p>
+            
+            <h3>6. Changes to Terms</h3>
+            <p>We may modify these terms at any time. Continued use constitutes acceptance.</p>
+        </div>
+    </div>
+    
+    <!-- Auth Modal -->
+    <div class="modal hidden" id="authModal">
+        <div class="modal-header">
+            <h2 id="authModalTitle">Sign In</h2>
+            <button class="close-modal" id="closeAuthModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="authEmail">Email Address</label>
+                    <input type="email" id="authEmail" required>
+                </div>
+                <div class="form-group" id="passwordGroup">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" required>
+                </div>
+                <div class="form-group hidden" id="nameGroup">
+                    <label for="authName">Your Name</label>
+                    <input type="text" id="authName">
+                </div>
+                <button type="submit" class="primary-btn" id="authSubmitBtn">Sign In</button>
+            </form>
+            <div class="auth-switch">
+                <span id="authSwitchText">Don't have an account?</span>
+                <button class="text-btn" id="authSwitchBtn">Sign Up</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
