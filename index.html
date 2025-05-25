@@ -860,25 +860,28 @@
         async function getCohereResponse(prompt) {
             try {
                 const response = await fetch('https://api.cohere.ai/v1/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${COHERE_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        message: prompt,
-                        model: 'command',
-                        temperature: 0.7,
-                        chat_history: conversationHistory.filter(msg => msg.role === 'USER' || msg.role === 'BOT')
-                            .map(msg => ({ role: msg.role.toUpperCase(), message: msg.message }))
-                    })
-                });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${COHERE_API_KEY}`
+  },
+  body: JSON.stringify({
+    model: 'command-r-plus', // atau 'command-r-plus' jika kamu punya akses
+    message: prompt,
+    temperature: 0.7,
+    chat_history: conversationHistory.map(msg => ({
+      role: msg.role === 'BOT' ? 'CHATBOT' : 'USER',
+      message: msg.message
+    })),
+    connectors: [], // opsional
+    preamble: "You are SuperNova, an expert helpful assistant."
+  })
+});
 
-                const data = await response.json();
-                return data.text;
-            } catch (error) {
-                console.error('Error getting response from Nova:', error);
-                return "Sorry, I'm having trouble connecting to the AI service. Please try again later.";
+const data = await response.json();
+const reply = data.text || "Maaf, tidak ada respons.";
+
+showBotMessage(reply); // atau log ke konsol
             }
         }
     </script>
