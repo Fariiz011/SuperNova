@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperNova - AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEFF;
+            --bg-light: #F8F9FA;
+            --bg-dark: #1E1E2D;
+            --card-light: #FFFFFF;
+            --card-dark: #2D2D3D;
+            --text-light: #2D3436;
+            --text-dark: #F5F6FA;
+            --border-light: #DFE6E9;
+            --border-dark: #43435A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--card-light);
+            border-right: 1px solid var(--border-light);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .sidebar {
+            background-color: var(--card-dark);
+            border-right-color: var(--border-dark);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .dark-mode .logo {
+            border-bottom-color: var(--border-dark);
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #636E72;
+            margin-bottom: 15px;
+        }
+
+        .dark-mode .section-title {
+            color: #A4B0BE;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(108, 92, 231, 0.1);
+        }
+
+        .dark-mode .nav-item:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+        }
+
+        .nav-item.active {
+            background-color: rgba(108, 92, 231, 0.2);
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .history-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .history-item:hover {
+            background-color: rgba(108, 92, 231, 0.1);
+        }
+
+        .dark-mode .history-item:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+        }
+
+        .history-item::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 18px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+
+        .history-user {
+            font-size: 12px;
+            color: #636E72;
+            margin-top: 5px;
+        }
+
+        .dark-mode .history-user {
+            color: #A4B0BE;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-light);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .chat-header {
+            background-color: var(--card-dark);
+            border-bottom-color: var(--border-dark);
+        }
+
+        .chat-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 15px;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .dark-mode .header-actions button {
+            color: var(--text-dark);
+        }
+
+        .header-actions button:hover {
+            color: var(--primary);
+        }
+
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--bg-light);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .chat-container {
+            background-color: var(--bg-dark);
+        }
+
+        .welcome-section {
+            text-align: center;
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            color: #636E72;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .dark-mode .welcome-subtitle {
+            color: #A4B0BE;
+        }
+
+        .get-started-btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .message {
+            max-width: 70%;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            margin-left: auto;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        .bot-message {
+            margin-right: auto;
+            background-color: var(--card-light);
+            color: var(--text-light);
+            padding: 15px 20px;
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .bot-message {
+            background-color: var(--card-dark);
+            color: var(--text-dark);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #636E72;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .dark-mode .message-time {
+            color: #A4B0BE;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            padding: 15px 20px;
+            background-color: var(--card-light);
+            border-radius: 18px 18px 18px 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .typing-indicator {
+            background-color: var(--card-dark);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
+        }
+
+        .input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border-light);
+            background-color: var(--card-light);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .input-container {
+            background-color: var(--card-dark);
+            border-top-color: var(--border-dark);
+        }
+
+        .input-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-light);
+            border-radius: 30px;
+            padding: 5px 5px 5px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .input-box {
+            background-color: var(--bg-dark);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-box input {
+            flex: 1;
+            border: none;
+            background: none;
+            outline: none;
+            padding: 12px 0;
+            color: var(--text-light);
+        }
+
+        .dark-mode .input-box input {
+            color: var(--text-dark);
+        }
+
+        .input-box input::placeholder {
+            color: #636E72;
+        }
+
+        .dark-mode .input-box input::placeholder {
+            color: #A4B0BE;
+        }
+
+        .input-box button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-box button:hover {
+            transform: scale(1.05);
+        }
+
+        .video-assessment {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--card-light);
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .video-assessment {
+            background-color: var(--card-dark);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .video-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .video-btn {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .video-btn:hover {
+            background-color: rgba(108, 92, 231, 0.1);
+        }
+
+        .dark-mode .video-btn {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .dark-mode .video-btn:hover {
+            background-color: rgba(0, 206, 255, 0.1);
+        }
+
+        /* Organic shapes decoration */
+        .organic-shape {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .shape-1 {
+            top: 10%;
+            left: 5%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--primary), transparent);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        .shape-2 {
+            bottom: 15%;
+            right: 5%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--secondary), transparent);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 20px;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="url(#paint0_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="url(#paint1_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 2V8" stroke="url(#paint2_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 16V22" stroke="url(#paint3_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 12H16" stroke="url(#paint4_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 12H4" stroke="url(#paint5_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19.071 19.071L16.949 16.949" stroke="url(#paint6_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7.05078 7.05078L4.92871 4.92871" stroke="url(#paint7_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="paint0_linear" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint1_linear" x1="8" y1="12" x2="16" y2="12" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint2_linear" x1="12" y1="2" x2="12" y2="8" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint3_linear" x1="12" y1="16" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint4_linear" x1="16" y1="12" x2="20" y2="12" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint5_linear" x1="4" y1="12" x2="8" y2="12" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint6_linear" x1="16.949" y1="16.949" x2="19.071" y2="19.071" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                        <linearGradient id="paint7_linear" x1="4.92871" y1="4.92871" x2="7.05078" y2="7.05078" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6C5CE7"/>
+                            <stop offset="1" stop-color="#00CEFF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">SuperNova</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="section-title">Main Menu</div>
+                <div class="nav-item active">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Chat with Nova</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-microphone"></i>
+                    <span>Talk with Nova</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-folder"></i>
+                    <span>Topics</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-th-large"></i>
+                    <span>View All</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="section-title">History</div>
+                <div class="history-item">
+                    How to create IoT app user flow?
+                    <div class="history-user">lifevandergamedev@gmail.com</div>
+                </div>
+                <div class="history-item">
+                    Top features for blockchain app?
+                    <div class="history-user">lifevandergamedev@gmail.com</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="chat-title">Chat with SuperNova</div>
+                <div class="header-actions">
+                    <button id="voice-btn" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="theme-toggle" title="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chat-container">
+                <!-- Welcome section (shown when no messages) -->
+                <div class="welcome-section" id="welcome-section">
+                    <div class="welcome-title">Meet the SuperNova!</div>
+                    <div class="welcome-subtitle">Your intelligent AI assistant ready to help with any question or task you have.</div>
+                    <button class="get-started-btn" id="get-started-btn">Need our help now? Get Started</button>
+                </div>
+
+                <!-- Video Assessment Section -->
+                <div class="video-assessment" id="video-assessment">
+                    <div class="video-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="video-text">Video Assessment:</div>
+                    <div class="video-subtext">Go ahead, I'm listening...</div>
+                    <button class="video-btn" id="start-video-btn">Start Video Session</button>
+                </div>
+
+                <!-- Chat messages will be inserted here -->
+                <div id="chat-messages"></div>
+
+                <!-- Organic shapes decoration -->
+                <div class="organic-shape shape-1"></div>
+                <div class="organic-shape shape-2"></div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-box">
+                    <input type="text" id="user-input" placeholder="Type your message...">
+                    <button id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const COHERE_API_KEY = 'CtO8mey0jw0cNzIteOPZ85wYJIAEuXBY0S0nhNWj'; // Replace with your actual API key
+        let conversationHistory = [];
+        let isFirstMessage = true;
+
+        // DOM Elements
+        const chatContainer = document.getElementById('chat-container');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const themeToggle = document.getElementById('theme-toggle');
+        const voiceBtn = document.getElementById('voice-btn');
+        const welcomeSection = document.getElementById('welcome-section');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const videoAssessment = document.getElementById('video-assessment');
+        const startVideoBtn = document.getElementById('start-video-btn');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load any saved conversation history
+            const savedHistory = localStorage.getItem('echoMindHistory');
+            if (savedHistory) {
+                conversationHistory = JSON.parse(savedHistory);
+                if (conversationHistory.length > 0) {
+                    welcomeSection.style.display = 'none';
+                    renderConversationHistory();
+                }
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Send message on button click
+            sendButton.addEventListener('click', sendMessage);
+
+            // Send message on Enter key
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Voice input button
+            voiceBtn.addEventListener('click', toggleVoiceInput);
+
+            // Get started button
+            getStartedBtn.addEventListener('click', () => {
+                welcomeSection.style.display = 'none';
+                addBotMessage("Hello! 👋 I'm SuperNova, your AI assistant. How can I help you today?");
+            });
+
+            // Start video session
+            startVideoBtn.addEventListener('click', startVideoSession);
+        }
+
+        // Toggle between light and dark theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // Toggle voice input
+        function toggleVoiceInput() {
+            // This would require Web Speech API implementation
+            alert("Voice input feature would be implemented here with Web Speech API");
+        }
+
+        // Start video session
+        function startVideoSession() {
+            // This would require WebRTC implementation
+            alert("Video assessment feature would be implemented here with WebRTC");
+        }
+
+        // Send message to chatbot
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addUserMessage(message);
+
+            // Clear input
+            userInput.value = '';
+
+            // Hide welcome section if it's the first message
+            if (isFirstMessage) {
+                welcomeSection.style.display = 'none';
+                isFirstMessage = false;
+            }
+
+            // Get response from Cohere API
+            const response = await getCohereResponse(message);
+            
+            // Add bot response to chat
+            addBotMessage(response);
+        }
+
+        // Add user message to chat UI
+        function addUserMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.textContent = message;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = getCurrentTime();
+            
+            messageDiv.appendChild(timeDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Add to conversation history
+            conversationHistory.push({
+                role: 'USER',
+                message: message,
+                time: new Date().toISOString()
+            });
+            
+            // Save to local storage
+            localStorage.setItem('echoMindHistory', JSON.stringify(conversationHistory));
+        }
+
+        // Add bot message to chat UI
+        function addBotMessage(message) {
+            // Show typing indicator
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingIndicator);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Simulate typing delay
+            setTimeout(() => {
+                // Remove typing indicator
+                typingIndicator.remove();
+                
+                // Add actual message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot-message';
+                messageDiv.textContent = message;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = getCurrentTime();
+                
+                messageDiv.appendChild(timeDiv);
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Add to conversation history
+                conversationHistory.push({
+                    role: 'BOT',
+                    message: message,
+                    time: new Date().toISOString()
+                });
+                
+                // Save to local storage
+                localStorage.setItem('echoMindHistory', JSON.stringify(conversationHistory));
+            }, 1500);
+        }
+
+        // Render conversation history
+        function renderConversationHistory() {
+            conversationHistory.forEach(item => {
+                if (item.role === 'USER') {
+                    addUserMessage(item.message);
+                } else {
+                    addBotMessage(item.message);
+                }
+            });
+        }
+
+        // Get current time in HH:MM format
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours().toString().padStart(2, '0') + ':' + 
+                   now.getMinutes().toString().padStart(2, '0');
+        }
+
+        // Get response from Cohere API
+        async function getCohereResponse(prompt) {
+            try {
+                const response = await fetch('https://api.cohere.ai/v1/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${COHERE_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        message: prompt,
+                        model: 'command',
+                        temperature: 0.7,
+                        chat_history: conversationHistory.filter(msg => msg.role === 'USER' || msg.role === 'BOT')
+                            .map(msg => ({ role: msg.role.toUpperCase(), message: msg.message }))
+                    })
+                });
+
+                const data = await response.json();
+                return data.text;
+            } catch (error) {
+                console.error('Error getting response from Nova:', error);
+                return "Sorry, I'm having trouble connecting to the AI service. Please try again later.";
+            }
+        }
+    </script>
+</body>
+</html>
