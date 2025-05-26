@@ -3,2256 +3,1493 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperNova - Asisten AI Multibahasa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>SuperNova - AI Asisten Anda v1.2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6C5CE7;
-            --primary-light: #7C6BFF;
+            --primary-dark: #5649C0;
             --secondary: #00CEFF;
-            --bg-light: #F8F9FA;
-            --bg-dark: #1E1E2D;
-            --card-light: #FFFFFF;
-            --card-dark: #2D2D3D;
-            --text-light: #2D3436;
-            --text-dark: #F5F6FA;
-            --border-light: #DFE6E9;
-            --border-dark: #43435A;
+            --dark: #2D3436;
+            --light: #F5F6FA;
+            --gray: #636E72;
             --success: #00B894;
             --warning: #FDCB6E;
-            --error: #D63031;
-            --gray: #636E72;
-            --light-gray: #DFE6E9;
+            --danger: #D63031;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Sora', sans-serif;
         }
-
+        
         body {
-            background-color: var(--bg-light);
-            color: var(--text-light);
-            transition: all 0.3s ease;
-        }
-
-        body.dark-mode {
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
-        }
-
-        /* Layout */
-        .app-container {
-            display: flex;
+            background-color: var(--light);
+            color: var(--dark);
             min-height: 100vh;
-            position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background-color: var(--card-light);
-            border-right: 1px solid var(--border-light);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s ease;
-            z-index: 100;
+        
+        /* System Alert */
+        .system-alert {
             position: fixed;
-            height: 100vh;
-            transform: translateX(-100%);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .dark-mode .sidebar {
-            background-color: var(--card-dark);
-            border-right-color: var(--border-dark);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .dark-mode .sidebar-header {
-            border-bottom-color: var(--border-dark);
-        }
-
-        .close-sidebar {
-            background: none;
-            border: none;
-            color: var(--gray);
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--danger);
             color: white;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 10px;
+            padding: 12px 24px;
             border-radius: 8px;
-            background-color: rgba(108, 92, 231, 0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .user-profile:hover {
-            background-color: rgba(108, 92, 231, 0.2);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .user-email {
-            font-size: 12px;
-            color: var(--gray);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .dark-mode .user-email {
-            color: #A4B0BE;
-        }
-
-        .nav-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gray);
-            margin-bottom: 15px;
-        }
-
-        .dark-mode .section-title {
-            color: #A4B0BE;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-item:hover {
-            background-color: rgba(108, 92, 231, 0.1);
-        }
-
-        .dark-mode .nav-item:hover {
-            background-color: rgba(108, 92, 231, 0.2);
-        }
-
-        .nav-item.active {
-            background-color: rgba(108, 92, 231, 0.2);
-            font-weight: 600;
-        }
-
-        .nav-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-            color: var(--primary);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            margin-left: 0;
-            transition: margin-left 0.3s ease;
-        }
-
-        .main-content.sidebar-open {
-            margin-left: 280px;
-        }
-
-        .top-bar {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--card-light);
-            border-bottom: 1px solid var(--border-light);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode .top-bar {
-            background-color: var(--card-dark);
-            border-bottom-color: var(--border-dark);
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: all 0.2s;
-        }
-
-        .dark-mode .menu-toggle {
-            color: var(--text-dark);
-        }
-
-        .menu-toggle:hover {
-            background-color: rgba(108, 92, 231, 0.1);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-actions button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: all 0.2s;
-            padding: 5px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-        }
-
-        .dark-mode .header-actions button {
-            color: var(--text-dark);
-        }
-
-        .header-actions button:hover {
-            color: var(--primary);
-            background-color: rgba(108, 92, 231, 0.1);
-        }
-
-        .language-selector {
-            position: relative;
-        }
-
-        .language-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: inherit;
-        }
-
-        .language-dropdown {
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: var(--card-light);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            padding: 5px 0;
-            min-width: 120px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
             display: none;
+            max-width: 90%;
+            text-align: center;
         }
-
-        .dark-mode .language-dropdown {
-            background-color: var(--card-dark);
-            border-color: var(--border-dark);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .language-dropdown.show {
-            display: block;
-        }
-
-        .language-option {
-            padding: 8px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .language-option:hover {
-            background-color: rgba(108, 92, 231, 0.1);
-        }
-
-        /* Page Content */
-        .page-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: var(--bg-light);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .dark-mode .page-content {
-            background-color: var(--bg-dark);
-        }
-
-        /* Home Page */
-        .home-page {
+        
+        /* Halaman Login */
+        .login-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             text-align: center;
-            height: 100%;
-            padding: 40px 20px;
+            position: relative;
         }
-
-        .welcome-title {
+        
+        .login-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+            background-color: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .login-title {
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: fadeInUp 0.8s ease;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        .welcome-subtitle {
-            color: var(--gray);
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+        
+        .login-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            max-width: 500px;
             line-height: 1.6;
-            max-width: 600px;
-            animation: fadeInUp 0.8s ease 0.2s forwards;
-            opacity: 0;
         }
-
-        .dark-mode .welcome-subtitle {
-            color: #A4B0BE;
-        }
-
-        .start-button {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
-            font-size: 1rem;
-            animation: fadeInUp 0.8s ease 0.4s forwards;
-            opacity: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .start-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
-        }
-
-        .register-text {
-            margin-top: 20px;
-            color: var(--gray);
-            font-size: 0.9rem;
-            animation: fadeInUp 0.8s ease 0.6s forwards;
-            opacity: 0;
-        }
-
-        .dark-mode .register-text {
-            color: #A4B0BE;
-        }
-
-        .register-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .footer {
-            margin-top: 40px;
-            color: var(--gray);
-            font-size: 0.8rem;
-            animation: fadeInUp 0.8s ease 0.8s forwards;
-            opacity: 0;
-        }
-
-        .dark-mode .footer {
-            color: #A4B0BE;
-        }
-
-        /* Dashboard Page */
-        .dashboard-page {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .dashboard-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: var(--text-light);
-        }
-
-        .dark-mode .dashboard-title {
-            color: var(--text-dark);
-        }
-
-        .plan-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
-            animation: fadeIn 0.8s ease;
-        }
-
-        .plan-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .plan-description {
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        .upgrade-button {
-            background-color: white;
-            color: var(--primary);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .upgrade-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .feature-card {
-            background-color: var(--card-light);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .dark-mode .feature-card {
-            background-color: var(--card-dark);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-mode .feature-card:hover {
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .feature-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: rgba(108, 92, 231, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            color: var(--primary);
-            font-size: 20px;
-        }
-
-        .feature-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--text-light);
-        }
-
-        .dark-mode .feature-title {
-            color: var(--text-dark);
-        }
-
-        .feature-description {
-            color: var(--gray);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .dark-mode .feature-description {
-            color: #A4B0BE;
-        }
-
-        .coming-soon {
-            background-color: rgba(253, 203, 110, 0.1);
-            color: var(--warning);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        /* Chat Page */
-        .chat-page {
+        
+        .login-buttons {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 60px);
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 1rem;
             width: 100%;
+            max-width: 300px;
         }
-
-        .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--card-light);
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-
-        .dark-mode .chat-header {
-            background-color: var(--card-dark);
-            border-bottom-color: var(--border-dark);
-        }
-
-        .chat-title {
-            font-size: 1.2rem;
+        
+        .btn {
+            padding: 1rem;
+            border-radius: 12px;
             font-weight: 600;
-        }
-
-        .chat-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: var(--bg-light);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .dark-mode .chat-container {
-            background-color: var(--bg-dark);
-        }
-
-        .welcome-section {
-            text-align: center;
-            max-width: 600px;
-            margin: 50px auto;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .message {
-            max-width: 80%;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeIn 0.3s forwards;
-        }
-
-        .user-message {
-            margin-left: auto;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 15px 20px;
-            border-radius: 18px 18px 4px 18px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .bot-message {
-            margin-right: auto;
-            background-color: var(--card-light);
-            color: var(--text-light);
-            padding: 15px 20px;
-            border-radius: 18px 18px 18px 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .dark-mode .bot-message {
-            background-color: var(--card-dark);
-            color: var(--text-dark);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .message-time {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 5px;
-            text-align: right;
-        }
-
-        .bot-message .message-time {
-            color: var(--gray);
-        }
-
-        .dark-mode .bot-message .message-time {
-            color: #A4B0BE;
-        }
-
-        .typing-indicator {
-            display: inline-flex;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: var(--card-light);
-            border-radius: 18px 18px 18px 4px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .dark-mode .typing-indicator {
-            background-color: var(--card-dark);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: typingAnimation 1.4s infinite ease-in-out;
-        }
-
-        .typing-text {
-            margin-left: 10px;
-            font-size: 14px;
-            color: var(--gray);
-        }
-
-        .dark-mode .typing-text {
-            color: #A4B0BE;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: 0s; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typingAnimation {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-4px); }
-        }
-
-        .input-container {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border-light);
-            background-color: var(--card-light);
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-
-        .dark-mode .input-container {
-            background-color: var(--card-dark);
-            border-top-color: var(--border-dark);
-        }
-
-        .input-box {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-light);
-            border-radius: 30px;
-            padding: 5px 5px 5px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
-        }
-
-        .dark-mode .input-box {
-            background-color: var(--bg-dark);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .input-box:focus-within {
-            box-shadow: 0 2px 15px rgba(108, 92, 231, 0.2);
-        }
-
-        .dark-mode .input-box:focus-within {
-            box-shadow: 0 2px 15px rgba(108, 92, 231, 0.3);
-        }
-
-        .input-box input {
-            flex: 1;
             border: none;
-            background: none;
-            outline: none;
-            padding: 12px 0;
-            color: var(--text-light);
-            font-size: 15px;
-        }
-
-        .dark-mode .input-box input {
-            color: var(--text-dark);
-        }
-
-        .input-box input::placeholder {
-            color: var(--gray);
-        }
-
-        .dark-mode .input-box input::placeholder {
-            color: #A4B0BE;
-        }
-
-        .input-box button {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
         }
-
-        .input-box button:hover {
-            transform: scale(1.05);
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
         }
-
-        .input-box button:disabled {
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
         }
-
-        /* Voice Page */
-        .voice-page {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: calc(100vh - 60px);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .voice-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: var(--text-light);
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .dark-mode .voice-title {
-            color: var(--text-dark);
-        }
-
-        .user-greeting {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: var(--text-light);
-            animation: fadeInUp 0.8s ease 0.2s forwards;
-            opacity: 0;
-        }
-
-        .dark-mode .user-greeting {
-            color: var(--text-dark);
-        }
-
-        .voice-prompt {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 30px;
-            color: var(--primary);
-            animation: fadeInUp 0.8s ease 0.4s forwards;
-            opacity: 0;
-        }
-
-        .voice-response {
-            background-color: var(--card-light);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            max-width: 600px;
-            width: 100%;
-            min-height: 150px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            animation: fadeInUp 0.8s ease 0.6s forwards;
-            opacity: 0;
-        }
-
-        .dark-mode .voice-response {
-            background-color: var(--card-dark);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .voice-input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            animation: fadeInUp 0.8s ease 0.8s forwards;
-            opacity: 0;
-        }
-
-        .voice-input-label {
-            color: var(--gray);
+        
+        .login-footer {
+            position: absolute;
+            bottom: 2rem;
+            color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
         }
-
-        .dark-mode .voice-input-label {
-            color: #A4B0BE;
+        
+        /* Dashboard */
+        .dashboard-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
         }
-
-        .voice-input-box {
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .menu-btn, .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            background-color: var(--bg-light);
-            border-radius: 30px;
-            padding: 5px 5px 5px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .dark-mode .voice-input-box {
-            background-color: var(--bg-dark);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .voice-input-box input {
-            flex: 1;
+            justify-content: center;
+            background-color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
             border: none;
-            background: none;
-            outline: none;
-            padding: 12px 0;
-            color: var(--text-light);
-            font-size: 15px;
         }
-
-        .dark-mode .voice-input-box input {
-            color: var(--text-dark);
+        
+        .menu-btn:hover, .profile-btn:hover {
+            background-color: #e0e0e0;
         }
-
-        .voice-input-box input::placeholder {
-            color: var(--gray);
+        
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
         }
-
-        .dark-mode .voice-input-box input::placeholder {
-            color: #A4B0BE;
-        }
-
-        .voice-action-button {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        
+        .profile-btn {
+            background-color: var(--primary);
             color: white;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            padding: 1.5rem;
+            padding-bottom: 80px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .premium-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-banner::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .premium-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .premium-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-upgrade {
+            background-color: white;
+            color: var(--primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
             border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-upgrade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .feature-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-section {
+            background-color: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-methods {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-btn {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            background-color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            color: inherit;
         }
-
-        .voice-action-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-
-        .voice-action-button.listening {
-            animation: pulse 1.5s infinite;
+        
+        .coming-soon {
+            background-color: var(--light);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
         }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(108, 92, 231, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0); }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 20;
+            transition: all 0.3s ease;
+            padding: 1.5rem;
+            overflow-y: auto;
         }
-
-        /* Login Modal */
-        .modal-overlay {
+        
+        .sidebar.open {
+            left: 0;
+        }
+        
+        .sidebar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0,0,0,0.5);
+            z-index: 15;
+            display: none;
+        }
+        
+        .sidebar-overlay.open {
+            display: block;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background-color: var(--card-light);
-            border-radius: 15px;
-            width: 100%;
-            max-width: 450px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
-
-        .dark-mode .modal {
-            background-color: var(--card-dark);
-        }
-
-        .modal-overlay.show .modal {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--text-light);
-        }
-
-        .dark-mode .modal-title {
-            color: var(--text-dark);
-        }
-
-        .modal-subtitle {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .dark-mode .modal-subtitle {
-            color: #A4B0BE;
-        }
-
-        .modal-body {
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .dark-mode .form-label {
-            color: var(--text-dark);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            background-color: var(--bg-light);
-            color: var(--text-light);
-        }
-
-        .dark-mode .form-input {
-            background-color: var(--bg-dark);
-            border-color: var(--border-dark);
-            color: var(--text-dark);
-        }
-
-        .form-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
-            outline: none;
-        }
-
-        .dark-mode .form-input:focus {
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
-        }
-
-        .modal-footer {
-            text-align: center;
-        }
-
-        .login-button {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
+            background-color: var(--light);
             cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            font-size: 1rem;
+            border: none;
         }
-
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        
+        .menu-list {
+            list-style: none;
         }
-
-        .modal-footer-text {
-            margin-top: 15px;
-            color: var(--gray);
-            font-size: 0.85rem;
-        }
-
-        .dark-mode .modal-footer-text {
-            color: #A4B0BE;
-        }
-
-        .modal-footer-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            background-color: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 100;
+        
+        .menu-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
         }
-
-        .notification.show {
-            transform: translateY(0);
-            opacity: 1;
+        
+        .menu-item:hover {
+            color: var(--primary);
         }
-
-        .notification.error {
-            background-color: var(--error);
+        
+        .menu-item svg {
+            width: 20px;
+            height: 20px;
         }
-
-        .notification.success {
-            background-color: var(--success);
+        
+        /* Halaman Chat */
+        .chat-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
         }
-
-        .notification.warning {
-            background-color: var(--warning);
-            color: var(--text-light);
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-
-        /* Markdown styling for bot messages */
-        .bot-message strong {
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light);
+            cursor: pointer;
+            margin-right: 1rem;
+            border: none;
+        }
+        
+        .chat-title {
+            text-align: center;
+            flex-grow: 1;
+            font-size: 1.2rem;
             font-weight: 600;
         }
-
-        .bot-message em {
-            font-style: italic;
+        
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-
-        .bot-message a {
-            color: var(--primary);
-            text-decoration: none;
+        
+        .message-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
         }
-
-        .bot-message a:hover {
-            text-decoration: underline;
+        
+        .user-message {
+            background-color: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
         }
-
-        .bot-message code {
-            background-color: rgba(108, 92, 231, 0.1);
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
+        
+        .bot-message {
+            background-color: #f0f0f0;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
         }
-
-        .dark-mode .bot-message code {
-            background-color: rgba(108, 92, 231, 0.2);
+        
+        .chat-input-area {
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            bottom: 0;
         }
-
-        .bot-message pre {
-            background-color: rgba(108, 92, 231, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 10px 0;
+        
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 1rem;
         }
-
-        .dark-mode .bot-message pre {
-            background-color: rgba(108, 92, 231, 0.2);
-        }
-
-        .bot-message ul,
-        .bot-message ol {
-            padding-left: 20px;
-            margin: 10px 0;
-        }
-
-        .bot-message li {
-            margin-bottom: 5px;
-        }
-
-        /* Organic shapes decoration */
-        .organic-shape {
-            position: absolute;
-            opacity: 0.1;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .shape-1 {
-            top: 10%;
-            left: 5%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, var(--primary), transparent);
+        
+        .send-btn {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            filter: blur(40px);
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            margin-left: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
-
-        .shape-2 {
-            bottom: 15%;
-            right: 5%;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, var(--secondary), transparent);
+        
+        .send-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .send-btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        /* Halaman Voice */
+        .voice-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .voice-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .voice-subtitle {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+        
+        .voice-icon {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary);
             border-radius: 50%;
-            filter: blur(30px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+            cursor: pointer;
+            border: none;
         }
-
+        
+        .voice-icon.listening {
+            animation: pulse 0.5s infinite;
+            background-color: var(--danger);
+        }
+        
+        .voice-response {
+            background-color: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            max-width: 80%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .voice-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .voice-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .voice-btn.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
-
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(108, 92, 231, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108, 92, 231, 0); }
+        }
+        
+        /* Loading Indicator */
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            height: 20px;
+        }
+        
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .loading-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { 
+                transform: scale(0);
+            } 40% { 
+                transform: scale(1);
             }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
-
-        @keyframes typingAnimation {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-4px); }
+        
+        /* Transisi Halaman */
+        .page {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--light);
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 280px;
-                transform: translateX(-280px);
+        
+        .page.active {
+            display: flex;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-title {
+                font-size: 2rem;
             }
             
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            
-            .main-content.sidebar-open {
-                margin-left: 0;
+            .login-subtitle {
+                font-size: 1rem;
             }
             
             .features-grid {
                 grid-template-columns: 1fr;
             }
             
-            .welcome-title {
-                font-size: 2rem;
+            .sidebar {
+                width: 85%;
+                left: -85%;
             }
             
-            .dashboard-title, .voice-title {
-                font-size: 1.5rem;
-            }
-            
-            .organic-shape {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .welcome-title {
-                font-size: 1.8rem;
-            }
-            
-            .welcome-subtitle {
-                font-size: 1rem;
-            }
-            
-            .start-button {
-                padding: 12px 30px;
-            }
-            
-            .plan-card {
-                padding: 20px;
-            }
-            
-            .plan-title {
-                font-size: 1.3rem;
-            }
-            
-            .chat-header, .input-container {
-                padding: 15px;
-            }
-            
-            .modal {
-                padding: 20px;
+            .message-bubble {
+                max-width: 90%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
+    <!-- System Alert -->
+    <div class="system-alert" id="systemAlert"></div>
+    
+    <!-- Halaman Login -->
+    <div class="page active" id="loginPage">
+        <div class="login-container">
+            <div class="login-logo" id="appLogo">
+                <!-- Logo akan dimuat di sini atau menggunakan placeholder -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary)">
+                    <path d="M12 2L4 7l8 5 8-5-8-5zm0 9L4 7l8 5 8-5-8 5zm0 9l-8-5 8-5 8 5-8 5z"/>
+                </svg>
+            </div>
+            <h1 class="login-title">Selamat Datang di SuperNova</h1>
+            <p class="login-subtitle">Memberikan solusi terbaik. Asisten AI dapat menjawab pertanyaan apa pun</p>
+            
+            <div class="login-buttons">
+                <button class="btn btn-primary" id="loginGoogle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.8 10.5H12v3h5.5c-.5 2.5-2.8 4-5.5 4-3.3 0-6-2.7-6-6s2.7-6 6-6c1.6 0 3 .6 4.1 1.6l2.9-2.9C16.5 2.8 14.3 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10c0-.7-.1-1.4-.2-2.5z"/>
+                    </svg>
+                    Login dengan Google
+                </button>
+                <button class="btn btn-secondary" id="startNow">
+                    Mulai Sekarang
+                </button>
+            </div>
+            
+            <div class="login-footer">
+                <p>Belum punya akun? bisa daftar ko</p>
+                <p>2025 SuperNova-By M.Fariz | Lifevander Indonesian Inc.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Halaman Dashboard -->
+    <div class="page" id="dashboardPage">
+        <div class="dashboard-container">
+            <div class="header">
+                <button class="menu-btn" id="menuBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </button>
+                <div class="app-title">SuperNova</div>
+                <button class="profile-btn">F</button>
+            </div>
+            
+            <div class="main-content">
+                <div class="premium-banner">
+                    <h3 class="premium-title">Premium Plan</h3>
+                    <p class="premium-desc">Unlock your ai chatbot & Get all premium features</p>
+                    <button class="btn-upgrade" id="upgradeBtn">Upgrade Plan</button>
+                </div>
+                
+                <div class="features-grid">
+                    <button class="feature-card" id="chatFeature">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="feature-title">Ngobrol dengan Nova</h4>
+                    </button>
+                    
+                    <button class="feature-card" id="voiceFeature">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </div>
+                        <h4 class="feature-title">Bicara dengan Nova</h4>
+                    </button>
+                </div>
+                
+                <div class="contact-section">
+                    <h4 class="section-title">Hubungi Kami</h4>
+                    <div class="contact-methods">
+                        <a href="https://wa.me/6281234567890" class="contact-btn" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </a>
+                        <a href="https://facebook.com/supernova" class="contact-btn" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/supernova" class="contact-btn" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <h4 class="section-title">Fitur Lainnya</h4>
+                    <div class="coming-soon" id="textIdeas">
+                        Buat ide dengan teks (Coming Soon)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    <div class="logo-icon">SN</div>
-                    <span class="logo-text">SuperNova</span>
-                </div>
-                <button class="close-sidebar" id="close-sidebar">
-                    <i class="fas fa-times"></i>
+                <div class="sidebar-title">Menu</div>
+                <button class="close-btn" id="closeBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
-
-            <div class="user-profile" id="user-profile">
-                <div class="user-avatar" id="user-avatar">?</div>
-                <div class="user-info">
-                    <div class="user-name" id="user-name">Guest</div>
-                    <div class="user-email" id="user-email">guest@example.com</div>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="section-title">Menu Utama</div>
-                <div class="nav-item" data-page="home">
-                    <i class="fas fa-home"></i>
-                    <span>Beranda</span>
-                </div>
-                <div class="nav-item" data-page="dashboard">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" data-page="chat">
-                    <i class="fas fa-comment-dots"></i>
-                    <span>Ngobrol dengan Nova</span>
-                </div>
-                <div class="nav-item" data-page="voice">
-                    <i class="fas fa-microphone"></i>
-                    <span>Bicara dengan Nova</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="section-title">Kontak</div>
-                <div class="nav-item" data-page="whatsapp">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>WhatsApp</span>
-                </div>
-                <div class="nav-item" data-page="facebook">
-                    <i class="fab fa-facebook"></i>
-                    <span>Facebook</span>
-                </div>
-                <div class="nav-item" data-page="instagram">
-                    <i class="fab fa-instagram"></i>
-                    <span>Instagram</span>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="section-title">Fitur Lainnya</div>
-                <div class="nav-item" data-page="ideas">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Buat Ide dengan Teks</span>
-                    <span class="coming-soon">Coming Soon</span>
-                </div>
-            </div>
+            
+            <ul class="menu-list">
+                <li>
+                    <button class="menu-item" id="profileMenu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Profile
+                    </button>
+                </li>
+                <li>
+                    <button class="menu-item" id="settingsMenu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Pengaturan
+                    </button>
+                </li>
+                <li>
+                    <button class="menu-item" id="privacyMenu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Privasi
+                    </button>
+                </li>
+                <li>
+                    <button class="menu-item" id="policyMenu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Kebijakan
+                    </button>
+                </li>
+                <li>
+                    <button class="menu-item" id="aboutMenu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        Tentang Kami
+                    </button>
+                </li>
+            </ul>
         </div>
-
-        <!-- Main Content -->
-        <div class="main-content" id="main-content">
-            <div class="top-bar">
-                <button class="menu-toggle" id="menu-toggle">
-                    <i class="fas fa-bars"></i>
+    </div>
+    
+    <!-- Halaman Chat -->
+    <div class="page" id="chatPage">
+        <div class="chat-container">
+            <div class="chat-header">
+                <button class="back-btn" id="backBtnChat">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
                 </button>
-                <div class="header-actions">
-                    <div class="language-selector">
-                        <button class="language-btn" id="language-btn">
-                            <i class="fas fa-globe"></i>
-                            <span>Bahasa Indonesia</span>
-                        </button>
-                        <div class="language-dropdown" id="language-dropdown">
-                            <div class="language-option" data-lang="id">
-                                <i class="fas fa-check"></i>
-                                <span>Bahasa Indonesia</span>
-                            </div>
-                            <div class="language-option" data-lang="en">
-                                <i class="fas"></i>
-                                <span>English</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button id="theme-toggle" title="Mode Gelap/Terang">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                <div class="chat-title">Talk With SuperNova</div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message-bubble bot-message">
+                    Hi, Fariz<br>Ada yang bisa saya bantu?
                 </div>
             </div>
-
-            <!-- Page Content -->
-            <div class="page-content" id="page-content">
-                <!-- Home Page -->
-                <div class="home-page" id="home-page">
-                    <h1 class="welcome-title">Selamat Datang di SuperNova</h1>
-                    <p class="welcome-subtitle">Memberikan solusi terbaik. Asisten AI dapat menjawab pertanyaan apa pun.</p>
-                    <button class="start-button" id="start-button">
-                        <i class="fas fa-rocket"></i> Memulai SuperNova
-                    </button>
-                    <p class="register-text">Belum punya akun? <a href="#" class="register-link" id="register-link">bisa daftar ko</a></p>
-                    <div class="footer">
-                        <p>2025 SuperNova - By M.Fariz | Lifevander</p>
-                        <p>Indonesian Inc.</p>
-                    </div>
-                </div>
-
-                <!-- Dashboard Page -->
-                <div class="dashboard-page" id="dashboard-page" style="display: none;">
-                    <h1 class="dashboard-title">Dashboard</h1>
-                    
-                    <div class="plan-card">
-                        <h2 class="plan-title">Premium Plan</h2>
-                        <p class="plan-description">Unlock your AI chatbot & Get all premium features</p>
-                        <button class="upgrade-button">
-                            <i class="fas fa-crown"></i> Upgrade Plan
-                        </button>
-                    </div>
-                    
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-comment-dots"></i>
-                            </div>
-                            <h3 class="feature-title">Ngobrol dengan Nova</h3>
-                            <p class="feature-description">Chat interaktif dengan AI asisten SuperNova</p>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-microphone"></i>
-                            </div>
-                            <h3 class="feature-title">Bicara dengan Nova</h3>
-                            <p class="feature-description">Berbicara langsung dengan AI menggunakan suara</p>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-headset"></i>
-                            </div>
-                            <h3 class="feature-title">Hubungi Kami</h3>
-                            <p class="feature-description">Dukungan pelanggan 24/7 untuk semua kebutuhan Anda</p>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-lightbulb"></i>
-                            </div>
-                            <h3 class="feature-title">Buat Ide dengan Teks</h3>
-                            <p class="feature-description">Generate ide kreatif dengan bantuan AI</p>
-                            <span class="coming-soon">Coming Soon</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat Page -->
-                <div class="chat-page" id="chat-page" style="display: none;">
-                    <div class="chat-header">
-                        <div class="chat-title">Ngobrol dengan Nova</div>
-                    </div>
-                    
-                    <div class="chat-container" id="chat-container">
-                        <div class="welcome-section" id="chat-welcome-section">
-                            <h2>Hi, <span id="chat-user-name">Guest</span></h2>
-                            <p>Ada yang bisa saya bantu?</p>
-                        </div>
-                        
-                        <div id="chat-messages"></div>
-                    </div>
-                    
-                    <div class="input-container">
-                        <div class="input-box">
-                            <input type="text" id="user-input" placeholder="Tulis pertanyaan...">
-                            <button id="send-button">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Voice Page -->
-                <div class="voice-page" id="voice-page" style="display: none;">
-                    <h1 class="voice-title">Voice With SuperNova</h1>
-                    <p class="user-greeting">Hi, <span id="voice-user-name">Guest</span></p>
-                    <p class="voice-prompt">Ada yang bisa saya bantu?</p>
-                    
-                    <div class="voice-response" id="voice-response">
-                        <p>Akan Muncul Suara AI atau teks Jawaban AI Disini</p>
-                    </div>
-                    
-                    <div class="voice-input-container">
-                        <span class="voice-input-label">Tekan tombol mikrofon untuk mulai berbicara</span>
-                        <div class="voice-input-box">
-                            <input type="text" id="voice-input" placeholder="Atau ketik pertanyaan Anda...">
-                            <button class="voice-action-button" id="voice-action-button">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- WhatsApp Page -->
-                <div class="dashboard-page" id="whatsapp-page" style="display: none;">
-                    <h1 class="dashboard-title">WhatsApp</h1>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <h3 class="feature-title">Hubungi Kami via WhatsApp</h3>
-                        <p class="feature-description">Kirim pesan langsung ke tim dukungan kami melalui WhatsApp untuk bantuan cepat.</p>
-                        <button class="upgrade-button" style="margin-top: 15px;">
-                            <i class="fab fa-whatsapp"></i> Buka WhatsApp
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Facebook Page -->
-                <div class="dashboard-page" id="facebook-page" style="display: none;">
-                    <h1 class="dashboard-title">Facebook</h1>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fab fa-facebook"></i>
-                        </div>
-                        <h3 class="feature-title">Temukan Kami di Facebook</h3>
-                        <p class="feature-description">Ikuti kami di Facebook untuk update terbaru dan berinteraksi dengan komunitas.</p>
-                        <button class="upgrade-button" style="margin-top: 15px;">
-                            <i class="fab fa-facebook"></i> Kunjungi Facebook
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Instagram Page -->
-                <div class="dashboard-page" id="instagram-page" style="display: none;">
-                    <h1 class="dashboard-title">Instagram</h1>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fab fa-instagram"></i>
-                        </div>
-                        <h3 class="feature-title">Ikuti Kami di Instagram</h3>
-                        <p class="feature-description">Lihat konten eksklusif dan update terbaru di Instagram kami.</p>
-                        <button class="upgrade-button" style="margin-top: 15px;">
-                            <i class="fab fa-instagram"></i> Kunjungi Instagram
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Coming Soon Pages -->
-                <div class="dashboard-page" id="ideas-page" style="display: none;">
-                    <h1 class="dashboard-title">Buat Ide dengan Teks</h1>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3 class="feature-title">Coming Soon!</h3>
-                        <p class="feature-description">Fitur ini sedang dalam pengembangan. Nantikan update terbaru dari kami.</p>
-                        <span class="coming-soon">Coming Soon</span>
-                    </div>
-                </div>
+            
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="messageInput" placeholder="Tulis pertanyaan..." autocomplete="off">
+                <button class="send-btn" id="sendBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
-
-    <!-- Login Modal -->
-    <div class="modal-overlay" id="login-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Login dengan Google</h2>
-                <p class="modal-subtitle">Masuk untuk mengakses semua fitur SuperNova</p>
+    
+    <!-- Halaman Voice -->
+    <div class="page" id="voicePage">
+        <div class="voice-container">
+            <h2 class="voice-title">Voice With SuperNova</h2>
+            <p class="voice-subtitle">Hi, Fariz</p>
+            <p class="voice-subtitle"><strong>Ada yang bisa saya bantu?</strong></p>
+            
+            <button class="voice-icon" id="voiceIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </button>
+            
+            <div class="voice-response" id="voiceResponse">
+                Akan Muncul Suara AI Atau teks Jawaban AI Disini
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="login-email" class="form-label">Email</label>
-                    <input type="email" id="login-email" class="form-input" placeholder="alamat@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="login-name" class="form-label">Nama Lengkap</label>
-                    <input type="text" id="login-name" class="form-input" placeholder="Nama Anda">
-                </div>
-                <div class="form-group">
-                    <label for="login-password" class="form-label">Password</label>
-                    <input type="password" id="login-password" class="form-input" placeholder="Password Anda">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="login-button" id="login-button">
-                    <i class="fab fa-google"></i> Lanjutkan dengan Google
+            
+            <div class="voice-controls">
+                <button class="voice-btn primary" id="startListening">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
                 </button>
-                <p class="modal-footer-text">
-                    Belum punya akun? <a href="#" class="modal-footer-link" id="modal-register-link">Daftar sekarang</a>
-                </p>
+                <button class="voice-btn" id="backBtnVoice">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
-
-    <!-- Notification element -->
-    <div class="notification" id="notification"></div>
-
-    <!-- Organic shapes decoration -->
-    <div class="organic-shape shape-1"></div>
-    <div class="organic-shape shape-2"></div>
-
+    
     <script>
-        // Configuration
-        const COHERE_API_KEY = '5oPNmerTHY8tWkVcuN00jTRsSN1Y3K2tbNE9RdOW'; // Ganti dengan API key Cohere Anda
-        const COHERE_API_URL = 'https://api.cohere.ai/v1/generate';
-        const MAX_HISTORY = 10; // Jumlah maksimum pesan yang disimpan
+        // Konfigurasi Cohere API
+        const COHERE_API_KEY = 'Q0SDjtBTdABFnipUNG0RPUQS2uriNmpXlQXztD54'; // Ganti dengan API key Anda
+        const COHERE_API_URL = 'https://api.cohere.ai/v1/chat';
         
-        // State aplikasi
-        let appState = {
-            currentLanguage: 'id',
-            currentPage: 'home',
-            user: null,
-            darkMode: false,
-            isListening: false,
-            recognition: null,
-            conversationHistory: []
-        };
-
-        // DOM Elements
-        const elements = {
-            // Layout
-            appContainer: document.querySelector('.app-container'),
-            sidebar: document.getElementById('sidebar'),
-            mainContent: document.getElementById('main-content'),
-            pageContent: document.getElementById('page-content'),
-            menuToggle: document.getElementById('menu-toggle'),
-            closeSidebar: document.getElementById('close-sidebar'),
+        // Inisialisasi aplikasi saat DOM siap
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debugging awal
+            console.log('Aplikasi SuperNova v1.2 dimuat');
             
-            // User profile
-            userProfile: document.getElementById('user-profile'),
-            userAvatar: document.getElementById('user-avatar'),
-            userName: document.getElementById('user-name'),
-            userEmail: document.getElementById('user-email'),
-            chatUserName: document.getElementById('chat-user-name'),
-            voiceUserName: document.getElementById('voice-user-name'),
-            
-            // Navigation
-            navItems: document.querySelectorAll('.nav-item'),
-            
-            // Language
-            languageBtn: document.getElementById('language-btn'),
-            languageDropdown: document.getElementById('language-dropdown'),
-            
-            // Theme
-            themeToggle: document.getElementById('theme-toggle'),
-            
-            // Pages
-            homePage: document.getElementById('home-page'),
-            dashboardPage: document.getElementById('dashboard-page'),
-            chatPage: document.getElementById('chat-page'),
-            voicePage: document.getElementById('voice-page'),
-            whatsappPage: document.getElementById('whatsapp-page'),
-            facebookPage: document.getElementById('facebook-page'),
-            instagramPage: document.getElementById('instagram-page'),
-            ideasPage: document.getElementById('ideas-page'),
-            
-            // Home page
-            startButton: document.getElementById('start-button'),
-            registerLink: document.getElementById('register-link'),
-            
-            // Chat page
-            chatContainer: document.getElementById('chat-container'),
-            chatMessages: document.getElementById('chat-messages'),
-            userInput: document.getElementById('user-input'),
-            sendButton: document.getElementById('send-button'),
-            
-            // Voice page
-            voiceResponse: document.getElementById('voice-response'),
-            voiceInput: document.getElementById('voice-input'),
-            voiceActionButton: document.getElementById('voice-action-button'),
-            
-            // Login modal
-            loginModal: document.getElementById('login-modal'),
-            loginEmail: document.getElementById('login-email'),
-            loginName: document.getElementById('login-name'),
-            loginPassword: document.getElementById('login-password'),
-            loginButton: document.getElementById('login-button'),
-            modalRegisterLink: document.getElementById('modal-register-link'),
-            
-            // Notification
-            notification: document.getElementById('notification')
-        };
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load saved settings
-            loadSettings();
-            
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Update UI with current language
-            updateUIForLanguage();
-            
-            // Check if user is logged in
-            checkAuth();
-            
-            // Show home page by default
-            showPage(appState.currentPage);
-        });
-
-        // Load settings from localStorage
-        function loadSettings() {
-            const savedSettings = localStorage.getItem('superNovaSettings');
-            if (savedSettings) {
-                appState = JSON.parse(savedSettings);
-                
-                // Apply dark mode if enabled
-                if (appState.darkMode) {
-                    document.body.classList.add('dark-mode');
-                    elements.themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                }
-                
-                // Load conversation history
-                const savedHistory = localStorage.getItem('superNovaHistory');
-                if (savedHistory) {
-                    appState.conversationHistory = JSON.parse(savedHistory);
-                }
-            }
-        }
-
-        // Save settings to localStorage
-        function saveSettings() {
-            localStorage.setItem('superNovaSettings', JSON.stringify(appState));
-            localStorage.setItem('superNovaHistory', JSON.stringify(appState.conversationHistory));
-        }
-
-        // Set up event listeners
-        function setupEventListeners() {
-            // Sidebar toggle
-            elements.menuToggle.addEventListener('click', toggleSidebar);
-            elements.closeSidebar.addEventListener('click', toggleSidebar);
-            
-            // Navigation
-            elements.navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const page = item.dataset.page;
-                    showPage(page);
-                    toggleSidebar();
-                });
-            });
-            
-            // Language selector
-            elements.languageBtn.addEventListener('click', toggleLanguageDropdown);
-            document.querySelectorAll('.language-option').forEach(option => {
-                option.addEventListener('click', () => changeLanguage(option.dataset.lang));
-            });
-            
-            // Theme toggle
-            elements.themeToggle.addEventListener('click', toggleTheme);
-            
-            // Home page
-            elements.startButton.addEventListener('click', showLoginModal);
-            elements.registerLink.addEventListener('click', showLoginModal);
-            
-            // Chat page
-            elements.sendButton.addEventListener('click', sendMessage);
-            elements.userInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-            
-            // Voice page
-            elements.voiceActionButton.addEventListener('click', toggleVoiceInput);
-            
-            // Login modal
-            elements.loginButton.addEventListener('click', handleLogin);
-            elements.modalRegisterLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Fitur pendaftaran akan segera hadir', 'info');
-            });
-            
-            // Close language dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!elements.languageBtn.contains(e.target)) {
-                    elements.languageDropdown.classList.remove('show');
-                }
-            });
-        }
-
-        // Toggle sidebar
-        function toggleSidebar() {
-            elements.sidebar.classList.toggle('open');
-            elements.mainContent.classList.toggle('sidebar-open');
-        }
-
-        // Show specific page
-        function showPage(page) {
-            // Hide all pages
-            document.querySelectorAll('[id$="-page"]').forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            // Show selected page
-            const pageElement = document.getElementById(`${page}-page`);
-            if (pageElement) {
-                pageElement.style.display = 'block';
-                appState.currentPage = page;
-                
-                // Update active nav item
-                elements.navItems.forEach(item => {
-                    if (item.dataset.page === page) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-                
-                // Scroll to top
-                window.scrollTo(0, 0);
-            }
-        }
-
-        // Toggle language dropdown
-        function toggleLanguageDropdown() {
-            elements.languageDropdown.classList.toggle('show');
-        }
-
-        // Change application language
-        function changeLanguage(lang) {
-            if (lang !== appState.currentLanguage) {
-                appState.currentLanguage = lang;
-                updateUIForLanguage();
-                saveSettings();
-                elements.languageDropdown.classList.remove('show');
-                showNotification(lang === 'id' ? 'Bahasa diubah ke Indonesia' : 'Language changed to English', 'success');
-            }
-        }
-
-        // Update UI elements for current language
-        function updateUIForLanguage() {
-            const lang = languageData[appState.currentLanguage];
-            
-            // Update language button
-            elements.languageBtn.querySelector('span').textContent = lang.currentLanguage;
-            
-            // Update active language in dropdown
-            document.querySelectorAll('.language-option i').forEach(icon => {
-                icon.className = 'fas';
-            });
-            document.querySelector(`.language-option[data-lang="${appState.currentLanguage}"] i`).className = 'fas fa-check';
-            
-            // Update chat page
-            if (appState.currentPage === 'chat') {
-                document.querySelector('.chat-title').textContent = lang.chatWith;
-                elements.userInput.placeholder = lang.inputPlaceholder;
-            }
-            
-            // Update voice page
-            if (appState.currentPage === 'voice') {
-                document.querySelector('.voice-title').textContent = 'Voice With SuperNova';
-                document.querySelector('.voice-prompt').textContent = lang.voicePrompt || 'Ada yang bisa saya bantu?';
-            }
-        }
-
-        // Toggle dark/light theme
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            appState.darkMode = document.body.classList.contains('dark-mode');
-            
-            const icon = elements.themeToggle.querySelector('i');
-            if (appState.darkMode) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-            }
-            
-            saveSettings();
-        }
-
-        // Show login modal
-        function showLoginModal() {
-            elements.loginModal.classList.add('show');
-        }
-
-        // Hide login modal
-        function hideLoginModal() {
-            elements.loginModal.classList.remove('show');
-        }
-
-        // Handle login
-        function handleLogin() {
-            const email = elements.loginEmail.value.trim();
-            const name = elements.loginName.value.trim();
-            const password = elements.loginPassword.value.trim();
-            
-            if (!email || !name || !password) {
-                showNotification('Harap isi semua field', 'error');
-                return;
-            }
-            
-            // Simulate login
-            setTimeout(() => {
-                const user = {
-                    email,
-                    name,
-                    initials: name.split(' ').map(n => n[0]).join('').toUpperCase(),
-                    avatarColor: getRandomColor()
-                };
-                
-                loginUser(user);
-                hideLoginModal();
-                showNotification('Login berhasil!', 'success');
-                
-                // Show dashboard after login
-                showPage('dashboard');
-            }, 1000);
-        }
-
-        // Check auth state
-        function checkAuth() {
-            const savedUser = localStorage.getItem('superNovaUser');
-            if (savedUser) {
-                loginUser(JSON.parse(savedUser));
-            }
-        }
-
-        // Login user
-        function loginUser(user) {
-            appState.user = user;
-            localStorage.setItem('superNovaUser', JSON.stringify(user));
-            updateUserProfile();
-        }
-
-        // Logout user
-        function logoutUser() {
-            appState.user = null;
-            localStorage.removeItem('superNovaUser');
-            updateUserProfile();
-        }
-
-        // Update user profile display
-        function updateUserProfile() {
-            if (appState.user) {
-                elements.userAvatar.textContent = appState.user.initials;
-                elements.userAvatar.style.backgroundColor = appState.user.avatarColor;
-                elements.userName.textContent = appState.user.name;
-                elements.userEmail.textContent = appState.user.email;
-                elements.chatUserName.textContent = appState.user.name;
-                elements.voiceUserName.textContent = appState.user.name;
-            } else {
-                elements.userAvatar.textContent = '?';
-                elements.userAvatar.style.backgroundColor = '#636E72';
-                elements.userName.textContent = 'Guest';
-                elements.userEmail.textContent = 'guest@example.com';
-                elements.chatUserName.textContent = 'Guest';
-                elements.voiceUserName.textContent = 'Guest';
-            }
-        }
-
-        // Get random color for avatar
-        function getRandomColor() {
-            const colors = [
-                '#6C5CE7', '#00CEFF', '#00B894', '#FDCB6E', 
-                '#E17055', '#D63031', '#0984E3', '#6D214F'
-            ];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        // Show notification
-        function showNotification(message, type = 'info') {
-            const notification = elements.notification;
-            notification.textContent = message;
-            notification.className = 'notification';
-            notification.classList.add(type);
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Send message to chatbot
-        async function sendMessage() {
-            const message = elements.userInput.value.trim();
-            const lang = languageData[appState.currentLanguage];
-            
-            if (!message) {
-                showNotification(lang.emptyMessage, 'warning');
-                return;
-            }
-
-            // Add user message to chat
-            addUserMessage(message);
-
-            // Clear input
-            elements.userInput.value = '';
-            elements.sendButton.disabled = true;
-
-            // Get response from Cohere API
-            try {
-                const response = await getCohereResponse(message);
-                addBotMessage(response);
-            } catch (error) {
-                console.error("Error:", error);
-                addBotMessage(lang.errorMessage);
-                showNotification(lang.apiError, 'error');
-            } finally {
-                elements.sendButton.disabled = false;
-            }
-        }
-
-        // Add user message to chat UI
-        function addUserMessage(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message user-message';
-            messageDiv.textContent = message;
-            
-            const timeDiv = document.createElement('div');
-            timeDiv.className = 'message-time';
-            timeDiv.textContent = getCurrentTime();
-            
-            messageDiv.appendChild(timeDiv);
-            elements.chatMessages.appendChild(messageDiv);
-            
-            // Scroll to bottom
-            elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
-            
-            // Add to conversation history
-            appState.conversationHistory.push({
-                role: 'USER',
-                message: message,
-                time: new Date().toISOString(),
-                language: appState.currentLanguage
-            });
-            
-            // Save to local storage
-            saveSettings();
-        }
-
-        // Add bot message to chat UI
-        function addBotMessage(message) {
-            // Show typing indicator
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'typing-indicator';
-            typingIndicator.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <span class="typing-text">${languageData[appState.currentLanguage].typing}</span>
-            `;
-            elements.chatMessages.appendChild(typingIndicator);
-            elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
-            
-            // Simulate typing delay
-            setTimeout(() => {
-                // Remove typing indicator
-                typingIndicator.remove();
-                
-                // Add actual message
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message bot-message';
-                messageDiv.innerHTML = formatMessage(message);
-                
-                const timeDiv = document.createElement('div');
-                timeDiv.className = 'message-time';
-                timeDiv.textContent = getCurrentTime();
-                
-                messageDiv.appendChild(timeDiv);
-                elements.chatMessages.appendChild(messageDiv);
-                
-                // Scroll to bottom
-                elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
-                
-                // Add to conversation history
-                appState.conversationHistory.push({
-                    role: 'BOT',
-                    message: message,
-                    time: new Date().toISOString(),
-                    language: appState.currentLanguage
-                });
-                
-                // Save to local storage
-                saveSettings();
-            }, 1500);
-        }
-
-        // Format message with markdown
-        function formatMessage(message) {
-            // Simple markdown formatting
-            let formatted = message
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // bold
-                .replace(/\*(.*?)\*/g, '<em>$1</em>') // italic
-                .replace(/`(.*?)`/g, '<code>$1</code>'); // code
-            
-            return formatted;
-        }
-
-        // Get response from Cohere Generate API
-        async function getCohereResponse(prompt) {
-            try {
-                // Prepare conversation context
-                const conversationContext = appState.conversationHistory
-                    .filter(msg => msg.language === appState.currentLanguage)
-                    .slice(-MAX_HISTORY)
-                    .map(msg => `${msg.role}: ${msg.message}`)
-                    .join('\n');
-                
-                const response = await fetch(COHERE_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${COHERE_API_KEY}`,
-                        'Cohere-Version': '2024-05-15'
-                    },
-                    body: JSON.stringify({
-                        model: 'command-r-plus',
-                        prompt: `${conversationContext}\nUSER: ${prompt}\nBOT:`,
-                        max_tokens: 2000,
-                        temperature: 0.7,
-                        k: 0,
-                        p: 0.75,
-                        frequency_penalty: 0,
-                        presence_penalty: 0,
-                        stop_sequences: ['\nUSER:'],
-                        return_likelihoods: 'NONE'
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.generations && data.generations.length > 0) {
-                    // Clean up response
-                    let cleanText = data.generations[0].text
-                        .trim()
-                        .replace(/\n+/g, '\n')
-                        .replace(/^:\s*/, '');
-                    
-                    // Stop if conversation continues
-                    const stopIndex = cleanText.indexOf('\nUSER:');
-                    if (stopIndex > -1) {
-                        cleanText = cleanText.substring(0, stopIndex);
-                    }
-                    
-                    return cleanText;
-                }
-                
-                throw new Error('Invalid response format from Cohere API');
-                
-            } catch (error) {
-                console.error('Error getting response from Cohere:', error);
-                throw error;
-            }
-        }
-
-        // Toggle voice input
-        function toggleVoiceInput() {
-            if (appState.isListening) {
-                stopVoiceInput();
-                return;
-            }
-            
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.lang = appState.currentLanguage === 'id' ? 'id-ID' : 'en-US';
-                recognition.interimResults = false;
-                
-                recognition.onstart = () => {
-                    appState.isListening = true;
-                    appState.recognition = recognition;
-                    elements.voiceActionButton.classList.add('listening');
-                    elements.voiceActionButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                    showNotification('Mendengarkan...', 'info');
-                };
-                
-                recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    elements.voiceInput.value = transcript;
-                    
-                    // Simulate AI response
-                    simulateVoiceResponse(transcript);
-                };
-                
-                recognition.onerror = (event) => {
-                    showNotification('Error: ' + event.error, 'error');
-                    stopVoiceInput();
-                };
-                
-                recognition.onend = () => {
-                    if (appState.isListening) {
-                        recognition.start(); // Continue listening
-                    }
-                };
-                
-                recognition.start();
-            } else {
-                showNotification('Browser tidak mendukung voice input', 'error');
-            }
-        }
-
-        // Stop voice input
-        function stopVoiceInput() {
-            if (appState.recognition) {
-                appState.recognition.stop();
-            }
-            appState.isListening = false;
-            appState.recognition = null;
-            elements.voiceActionButton.classList.remove('listening');
-            elements.voiceActionButton.innerHTML = '<i class="fas fa-microphone"></i>';
-        }
-
-        // Simulate voice response
-        function simulateVoiceResponse(question) {
-            const responses = {
-                id: [
-                    "Saya mengerti pertanyaan Anda tentang " + question + ". Berikut penjelasannya...",
-                    "Pertanyaan yang bagus! " + question + " adalah topik yang menarik. Mari kita bahas...",
-                    "Untuk menjawab " + question + ", pertama kita perlu memahami konsep dasarnya..."
-                ],
-                en: [
-                    "I understand your question about " + question + ". Here's the explanation...",
-                    "Great question! " + question + " is an interesting topic. Let's discuss it...",
-                    "To answer " + question + ", we first need to understand the basic concepts..."
-                ]
+            // ======================
+            // Inisialisasi Elemen DOM
+            // ======================
+            const pages = {
+                login: document.getElementById('loginPage'),
+                dashboard: document.getElementById('dashboardPage'),
+                chat: document.getElementById('chatPage'),
+                voice: document.getElementById('voicePage')
             };
             
-            const langResponses = responses[appState.currentLanguage] || responses.id;
-            const randomResponse = langResponses[Math.floor(Math.random() * langResponses.length)];
+            const elements = {
+                // Login
+                loginGoogle: document.getElementById('loginGoogle'),
+                startNow: document.getElementById('startNow'),
+                appLogo: document.getElementById('appLogo'),
+                
+                // Dashboard
+                menuBtn: document.getElementById('menuBtn'),
+                sidebar: document.getElementById('sidebar'),
+                sidebarOverlay: document.getElementById('sidebarOverlay'),
+                closeBtn: document.getElementById('closeBtn'),
+                chatFeature: document.getElementById('chatFeature'),
+                voiceFeature: document.getElementById('voiceFeature'),
+                upgradeBtn: document.getElementById('upgradeBtn'),
+                textIdeas: document.getElementById('textIdeas'),
+                
+                // Chat
+                backBtnChat: document.getElementById('backBtnChat'),
+                messageInput: document.getElementById('messageInput'),
+                sendBtn: document.getElementById('sendBtn'),
+                chatMessages: document.getElementById('chatMessages'),
+                
+                // Voice
+                backBtnVoice: document.getElementById('backBtnVoice'),
+                voiceIcon: document.getElementById('voiceIcon'),
+                voiceResponse: document.getElementById('voiceResponse'),
+                startListening: document.getElementById('startListening'),
+                
+                // System
+                systemAlert: document.getElementById('systemAlert')
+            };
             
-            // Show typing indicator
-            elements.voiceResponse.innerHTML = '<p>SuperNova sedang memproses...</p>';
+            // Menu sidebar
+            const menuItems = {
+                profile: document.getElementById('profileMenu'),
+                settings: document.getElementById('settingsMenu'),
+                privacy: document.getElementById('privacyMenu'),
+                policy: document.getElementById('policyMenu'),
+                about: document.getElementById('aboutMenu')
+            };
             
-            // Simulate delay
-            setTimeout(() => {
-                elements.voiceResponse.innerHTML = `<p>${randomResponse}</p>`;
-                stopVoiceInput();
-            }, 2000);
-        }
-
-        // Get current time in HH:MM format
-        function getCurrentTime() {
-            const now = new Date();
-            return now.getHours().toString().padStart(2, '0') + ':' + 
-                   now.getMinutes().toString().padStart(2, '0');
-        }
+            // ======================
+            // Variabel Aplikasi
+            // ======================
+            let chatHistory = [
+                {
+                    role: "CHATBOT",
+                    message: "Hi, Fariz! Ada yang bisa saya bantu?"
+                }
+            ];
+            
+            let isListening = false;
+            let recognition;
+            let speechSynthesis = window.speechSynthesis;
+            
+            // ======================
+            // Fungsi Utilitas
+            // ======================
+            
+            /**
+             * Menampilkan halaman tertentu dan menyembunyikan yang lain
+             * @param {HTMLElement} page - Elemen halaman yang akan ditampilkan
+             */
+            function showPage(page) {
+                try {
+                    // Sembunyikan semua halaman
+                    Object.values(pages).forEach(p => {
+                        p.style.display = 'none';
+                        p.classList.remove('active');
+                    });
+                    
+                    // Tampilkan halaman yang dipilih
+                    page.style.display = 'flex';
+                    page.classList.add('active');
+                    
+                    // Scroll ke bawah untuk halaman chat
+                    if (page === pages.chat) {
+                        setTimeout(() => {
+                            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                        }, 100);
+                    }
+                    
+                    console.log('Navigasi ke halaman:', page.id);
+                } catch (error) {
+                    showAlert('Terjadi kesalahan saat navigasi');
+                    console.error('Error dalam showPage:', error);
+                }
+            }
+            
+            /**
+             * Menampilkan alert sistem
+             * @param {string} message - Pesan yang akan ditampilkan
+             * @param {number} duration - Durasi tampilan (ms)
+             */
+            function showAlert(message, duration = 3000) {
+                elements.systemAlert.textContent = message;
+                elements.systemAlert.style.display = 'block';
+                
+                setTimeout(() => {
+                    elements.systemAlert.style.display = 'none';
+                }, duration);
+            }
+            
+            /**
+             * Inisialisasi Web Speech API
+             */
+            function initSpeechRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                
+                if (SpeechRecognition) {
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.interimResults = false;
+                    recognition.lang = 'id-ID';
+                    
+                    recognition.onstart = function() {
+                        isListening = true;
+                        elements.voiceIcon.classList.add('listening');
+                        elements.voiceResponse.textContent = "Mendengarkan...";
+                        console.log('Speech recognition started');
+                    };
+                    
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        console.log('Speech recognized:', transcript);
+                        elements.voiceResponse.textContent = transcript;
+                        processVoiceCommand(transcript);
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        console.error('Speech recognition error:', event.error);
+                        showAlert('Error pengenalan suara: ' + event.error);
+                        isListening = false;
+                        elements.voiceIcon.classList.remove('listening');
+                    };
+                    
+                    recognition.onend = function() {
+                        isListening = false;
+                        elements.voiceIcon.classList.remove('listening');
+                        console.log('Speech recognition ended');
+                    };
+                } else {
+                    console.warn('Web Speech API tidak didukung di browser ini');
+                    elements.startListening.style.display = 'none';
+                    elements.voiceResponse.textContent = "Browser Anda tidak mendukung fitur suara. Silakan gunakan Chrome atau Edge.";
+                }
+            }
+            
+            /**
+             * Memproses perintah suara
+             * @param {string} command - Perintah suara yang diucapkan pengguna
+             */
+            function processVoiceCommand(command) {
+                console.log('Memproses perintah suara:', command);
+                elements.voiceResponse.textContent = "Memproses: " + command;
+                
+                // Tambahkan ke history chat
+                chatHistory.push({
+                    role: "USER",
+                    message: command
+                });
+                
+                // Dapatkan respon dari AI
+                getAIResponse(command)
+                    .then(response => {
+                        console.log('Respon AI:', response);
+                        elements.voiceResponse.textContent = response;
+                        
+                        // Bicarkan respon
+                        if (speechSynthesis) {
+                            const utterance = new SpeechSynthesisUtterance(response);
+                            utterance.lang = 'id-ID';
+                            speechSynthesis.speak(utterance);
+                        }
+                        
+                        // Simpan respon ke history
+                        chatHistory.push({
+                            role: "CHATBOT",
+                            message: response
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error dalam processVoiceCommand:', error);
+                        elements.voiceResponse.textContent = "Maaf, terjadi kesalahan. Silakan coba lagi.";
+                        showAlert('Error memproses perintah suara');
+                    });
+            }
+            
+            /**
+             * Mendapatkan respon dari Cohere AI
+             * @param {string} message - Pesan pengguna
+             * @returns {Promise<string>} - Respon dari AI
+             */
+            async function getAIResponse(message) {
+                try {
+                    // Jika API key tidak diisi, gunakan respon lokal
+                    if (!COHERE_API_KEY || COHERE_API_KEY === 'YOUR_COHERE_API_KEY') {
+                        console.warn('Cohere API key tidak ditemukan, menggunakan respon lokal');
+                        return getLocalAIResponse(message);
+                    }
+                    
+                    const response = await fetch(COHERE_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${COHERE_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: "command-r-plus",
+                            chat_history: chatHistory,
+                            message: message,
+                            temperature: 0.7
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.text;
+                } catch (error) {
+                    console.error('Error dalam getAIResponse:', error);
+                    // Fallback ke respon lokal jika API error
+                    return getLocalAIResponse(message);
+                }
+            }
+            
+            /**
+             * Respon lokal ketika Cohere API tidak tersedia
+             * @param {string} message - Pesan pengguna
+             * @returns {string} - Respon lokal
+             */
+            function getLocalAIResponse(message) {
+                const lowerMsg = message.toLowerCase();
+                
+                const responses = {
+                    greeting: [
+                        "Halo Fariz! Ada yang bisa saya bantu?",
+                        "Hai! Senang bertemu dengan Anda. Ada yang bisa saya bantu?",
+                        "Halo! Saya SuperNova, asisten AI Anda."
+                    ],
+                    name: [
+                        "Nama saya SuperNova, asisten AI Anda.",
+                        "Saya SuperNova, siap membantu Anda!",
+                        "Panggil saya SuperNova, asisten virtual Anda."
+                    ],
+                    feature: [
+                        "Saya bisa membantu menjawab pertanyaan, memberikan rekomendasi, dan banyak lagi. Coba tanyakan sesuatu!",
+                        "Fitur saya termasuk chat, voice command, dan berbagai solusi AI. Apa yang Anda butuhkan?",
+                        "Saya bisa membantu dengan berbagai tugas. Coba tanyakan sesuatu spesifik."
+                    ],
+                    thanks: [
+                        "Sama-sama Fariz! Senang bisa membantu.",
+                        "Terima kasih kembali!",
+                        "Dengan senang hati!"
+                    ],
+                    default: [
+                        "Saya mengerti pertanyaan Anda: \"" + message + "\". Saat ini saya masih dalam pengembangan, tetapi saya akan terus belajar untuk membantu Anda lebih baik.",
+                        "Pertanyaan yang menarik! Saya akan mencoba membantu dengan: \"" + message + "\".",
+                        "Saya mencatat pertanyaan Anda tentang \"" + message + "\". Mari kita bahas lebih lanjut."
+                    ]
+                };
+                
+                if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('hi')) {
+                    return responses.greeting[Math.floor(Math.random() * responses.greeting.length)];
+                } else if (lowerMsg.includes('nama') && lowerMsg.includes('kamu')) {
+                    return responses.name[Math.floor(Math.random() * responses.name.length)];
+                } else if (lowerMsg.includes('fitur') || lowerMsg.includes('bisa apa')) {
+                    return responses.feature[Math.floor(Math.random() * responses.feature.length)];
+                } else if (lowerMsg.includes('terima kasih') || lowerMsg.includes('thanks')) {
+                    return responses.thanks[Math.floor(Math.random() * responses.thanks.length)];
+                } else {
+                    return responses.default[Math.floor(Math.random() * responses.default.length)];
+                }
+            }
+            
+            /**
+             * Mengirim pesan teks
+             */
+            function sendMessage() {
+                const message = elements.messageInput.value.trim();
+                if (!message) return;
+                
+                try {
+                    // Disable input sementara
+                    elements.messageInput.disabled = true;
+                    elements.sendBtn.disabled = true;
+                    
+                    // Tambahkan pesan user ke history
+                    chatHistory.push({
+                        role: "USER",
+                        message: message
+                    });
+                    
+                    // Tambahkan pesan user ke UI
+                    const userBubble = document.createElement('div');
+                    userBubble.className = 'message-bubble user-message';
+                    userBubble.textContent = message;
+                    elements.chatMessages.appendChild(userBubble);
+                    
+                    // Tambahkan loading indicator
+                    const loadingBubble = document.createElement('div');
+                    loadingBubble.className = 'message-bubble bot-message';
+                    loadingBubble.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+                    elements.chatMessages.appendChild(loadingBubble);
+                    
+                    // Kosongkan input
+                    elements.messageInput.value = '';
+                    
+                    // Scroll ke bawah
+                    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                    
+                    // Kirim ke AI
+                    getAIResponse(message)
+                        .then(response => {
+                            // Hapus loading indicator
+                            elements.chatMessages.removeChild(loadingBubble);
+                            
+                            // Tambahkan respon ke history
+                            chatHistory.push({
+                                role: "CHATBOT",
+                                message: response
+                            });
+                            
+                            // Tambahkan respon ke UI
+                            const botBubble = document.createElement('div');
+                            botBubble.className = 'message-bubble bot-message';
+                            botBubble.textContent = response;
+                            elements.chatMessages.appendChild(botBubble);
+                            
+                            // Scroll ke bawah
+                            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                        })
+                        .catch(error => {
+                            console.error('Error dalam sendMessage:', error);
+                            elements.chatMessages.removeChild(loadingBubble);
+                            
+                            const errorBubble = document.createElement('div');
+                            errorBubble.className = 'message-bubble bot-message';
+                            errorBubble.textContent = 'Maaf, terjadi kesalahan. Silakan coba lagi.';
+                            elements.chatMessages.appendChild(errorBubble);
+                            
+                            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                        })
+                        .finally(() => {
+                            // Enable input kembali
+                            elements.messageInput.disabled = false;
+                            elements.sendBtn.disabled = false;
+                            elements.messageInput.focus();
+                        });
+                } catch (error) {
+                    console.error('Error dalam sendMessage:', error);
+                    showAlert('Terjadi kesalahan saat mengirim pesan');
+                    
+                    // Enable input kembali
+                    elements.messageInput.disabled = false;
+                    elements.sendBtn.disabled = false;
+                    elements.messageInput.focus();
+                }
+            }
+            
+            // ======================
+            // Event Listeners
+            // ======================
+            
+            // Navigasi halaman
+            elements.loginGoogle.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Login dengan Google diklik');
+                showPage(pages.dashboard);
+            });
+            
+            elements.startNow.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Mulai Sekarang diklik');
+                showPage(pages.dashboard);
+            });
+            
+            elements.chatFeature.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Chat feature diklik');
+                showPage(pages.chat);
+            });
+            
+            elements.voiceFeature.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Voice feature diklik');
+                showPage(pages.voice);
+            });
+            
+            elements.backBtnChat.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Kembali dari chat');
+                showPage(pages.dashboard);
+            });
+            
+            elements.backBtnVoice.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Kembali dari voice');
+                showPage(pages.dashboard);
+            });
+            
+            // Sidebar
+            elements.menuBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Menu diklik');
+                elements.sidebar.classList.add('open');
+                elements.sidebarOverlay.classList.add('open');
+            });
+            
+            elements.closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Close sidebar diklik');
+                elements.sidebar.classList.remove('open');
+                elements.sidebarOverlay.classList.remove('open');
+            });
+            
+            elements.sidebarOverlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Overlay diklik');
+                elements.sidebar.classList.remove('open');
+                elements.sidebarOverlay.classList.remove('open');
+            });
+            
+            // Menu sidebar
+            Object.values(menuItems).forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const id = this.id.replace('Menu', '');
+                    console.log('Menu item diklik:', id);
+                    showAlert(`Membuka halaman: ${id}`);
+                    elements.sidebar.classList.remove('open');
+                    elements.sidebarOverlay.classList.remove('open');
+                });
+            });
+            
+            // Fitur lainnya
+            elements.upgradeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Upgrade diklik');
+                showAlert('Fitur premium akan segera hadir!');
+            });
+            
+            elements.textIdeas.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Text ideas diklik');
+                showAlert('Fitur "Buat ide dengan teks" akan segera hadir!');
+            });
+            
+            // Chat
+            elements.sendBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Send diklik');
+                sendMessage();
+            });
+            
+            elements.messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    console.log('Enter ditekan');
+                    sendMessage();
+                }
+            });
+            
+            // Voice
+            elements.startListening.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Start listening diklik');
+                
+                if (!recognition) {
+                    showAlert('Browser tidak mendukung pengenalan suara');
+                    return;
+                }
+                
+                if (!isListening) {
+                    try {
+                        recognition.start();
+                    } catch (error) {
+                        console.error('Error starting recognition:', error);
+                        showAlert('Error memulai pengenalan suara');
+                    }
+                } else {
+                    recognition.stop();
+                }
+            });
+            
+            // Logo error handling
+            elements.appLogo.onerror = function() {
+                console.log('Logo tidak ditemukan, menggunakan placeholder SVG');
+                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2L4 7l8 5 8-5-8-5zm0 9L4 7l8 5 8-5-8 5zm0 9l-8-5 8-5 8 5-8 5z"/></svg>';
+            };
+            
+            // ======================
+            // Inisialisasi Aplikasi
+            // ======================
+            
+            // Cek fitur browser
+            if (!window.fetch) {
+                showAlert('Browser Anda tidak mendukung fitur fetch. Silakan gunakan browser modern.');
+            }
+            
+            // Inisialisasi Web Speech API
+            initSpeechRecognition();
+            
+            // Fokus ke input pesan saat halaman chat dibuka
+            elements.messageInput.addEventListener('focus', function() {
+                console.log('Input chat difokuskan');
+                // Pastikan keyboard tidak menutupi input di mobile
+                setTimeout(() => {
+                    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                }, 300);
+            });
+            
+            console.log('Aplikasi SuperNova v1.2 siap digunakan');
+        });
     </script>
 </body>
 </html>
