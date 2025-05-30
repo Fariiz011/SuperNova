@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaAI - Masuk/Daftar</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-logo">
+            <img src="assets/logo.png" alt="NovaAI" class="logo">
+        </div>
+
+        <div class="auth-tabs">
+            <button class="tab-btn active" id="login-tab">Masuk</button>
+            <button class="tab-btn" id="register-tab">Daftar</button>
+        </div>
+
+        <div class="auth-forms">
+            <!-- Form Login -->
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="auth-btn">Masuk</button>
+            </form>
+
+            <!-- Form Daftar -->
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="auth-btn">Daftar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="notification" id="auth-notification"></div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

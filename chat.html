@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaAI - Chat</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="chat-page">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/logo.png" alt="NovaAI" class="logo">
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="new-chat"><i class="fas fa-plus"></i> Obrolan Baru</a></li>
+            <li><a href="#" class="active"><i class="fas fa-comment"></i> Obrolan</a></li>
+            <li><a href="#"><i class="fas fa-history"></i> History</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+
+    <main class="chat-container">
+        <div class="chat-header">
+            <div class="logo-center">
+                <img src="assets/logo.png" alt="NovaAI" class="logo">
+            </div>
+            <div class="quick-features">
+                <button class="quick-btn" id="quick-generate">Generate Image</button>
+                <button class="quick-btn" id="quick-analyze">Analisis Dokumen</button>
+                <button class="quick-btn" id="quick-hd">HD Image</button>
+                <button class="quick-btn" id="quick-talk">Talk with Nova</button>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <!-- Pesan akan muncul di sini -->
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input">
+                <button class="btn-attach"><i class="fas fa-plus"></i></button>
+                <input type="text" placeholder="Tulis pertanyaan ke Nova..." id="message-input">
+                <button class="btn-voice"><i class="fas fa-microphone"></i></button>
+                <button class="btn-send"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/chat.js"></script>
+    <script src="js/api.js"></script>
+</body>
+</html>

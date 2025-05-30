@@ -1,281 +1,63 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nova - AI Super Writing Assistant</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --brand: #246bff;
-      --brand-light: #3c8aff;
-      --bg: #191b1e;
-      --card: #232329;
-      --border: #33353a;
-      --gray: #bfc1c7;
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: var(--bg);
-      color: #fff;
-      font-family: 'Montserrat', Arial, sans-serif;
-      min-height: 100vh;
-    }
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 32px 22px 0 22px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      font-weight: 700;
-      font-size: 1.45rem;
-      letter-spacing: 0.01em;
-      gap: 10px;
-    }
-    .brand img {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-      vertical-align: middle;
-      border-radius: 50%;
-    }
-    .btn-login {
-      font-size: 1.08rem;
-      background: transparent;
-      color: #fff;
-      border: 1.5px solid #6c6c75;
-      border-radius: 24px;
-      padding: 6px 22px;
-      cursor: pointer;
-      outline: none;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
-      font-weight: 500;
-      margin-top: 6px;
-    }
-    .btn-login:hover {
-      background: #232329;
-      color: var(--brand-light);
-      border-color: var(--brand-light);
-    }
-    .center-logo {
-      margin: 22px auto 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .center-logo img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      border-radius: 50%;
-      box-shadow: 0 0 22px 0 rgba(36,107,255,0.09);
-      background: #232329;
-    }
-    .headline {
-      margin: 36px 0 0 0;
-      text-align: center;
-      font-weight: 700;
-      font-size: 2.1rem;
-      letter-spacing: 0.01em;
-      line-height: 1.1;
-    }
-    .subtitle {
-      margin: 14px 0 0 0;
-      text-align: center;
-      font-size: 1.13rem;
-      font-weight: 400;
-      color: var(--gray);
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.45;
-    }
-    .actions-row {
-      display: flex;
-      flex-direction: row;
-      gap: 12px;
-      justify-content: center;
-      margin: 32px 0 0 0;
-      flex-wrap: wrap;
-    }
-    .action-btn {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--card);
-      border: 1.5px solid var(--border);
-      color: #fff;
-      font-weight: 600;
-      border-radius: 17px;
-      padding: 13px 20px;
-      cursor: pointer;
-      font-size: 1.02rem;
-      min-width: 120px;
-      transition: background 0.18s, border 0.18s;
-      outline: none;
-    }
-    .action-btn .icon {
-      font-size: 1.25em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .action-btn:hover {
-      background: #282b32;
-      border-color: var(--brand-light);
-      color: var(--brand-light);
-    }
-    .action-btn.arrow {
-      padding-right: 10px;
-    }
-    .prompt-box-wrap {
-      margin: 22px auto 0 auto;
-      width: 92vw;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .prompt-box {
-      background: #232329;
-      border: 1.5px solid var(--border);
-      border-radius: 18px;
-      padding: 20px 18px 20px 18px;
-      width: 100%;
-      color: #bfc1c7;
-      font-size: 1.08rem;
-      min-height: 76px;
-      box-sizing: border-box;
-      margin-bottom: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
-    .prompt-content {
-      margin-bottom: 24px;
-      font-size: 1.04rem;
-      color: #bfc1c7;
-      min-height: 28px;
-      word-break: break-word;
-    }
-    .prompt-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
-      pointer-events: none;
-    }
-    .prompt-plus, .prompt-send {
-      width: 34px;
-      height: 34px;
-      background: #232329;
-      border: 1.5px solid var(--border);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #bfc1c7;
-      font-size: 1.28rem;
-      cursor: pointer;
-      pointer-events: auto;
-      transition: border 0.15s, color 0.15s, background 0.15s;
-    }
-    .prompt-plus:hover, .prompt-send:hover {
-      border: 1.5px solid var(--brand-light);
-      color: var(--brand-light);
-      background: #18181b;
-    }
-    .prompt-send {
-      background: #232329;
-    }
-    .cta-btn {
-      width: 100%;
-      max-width: 440px;
-      display: block;
-      margin: 32px auto 0 auto;
-      background: linear-gradient(90deg, #1b82f7, #4765ff);
-      color: #fff;
-      font-size: 1.21rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 18px;
-      padding: 18px 0;
-      letter-spacing: 0.01em;
-      cursor: pointer;
-      box-shadow: 0 1px 24px 0 rgba(27,130,247,0.16);
-      transition: background 0.18s, transform 0.13s;
-    }
-    .cta-btn:hover {
-      background: linear-gradient(90deg, #4765ff, #1b82f7);
-      transform: translateY(-2px) scale(1.025);
-    }
-    @media (max-width: 600px) {
-      .headline { font-size: 1.38rem; }
-      .subtitle { font-size: 1.01rem; }
-      .center-logo img { width: 66px; height: 66px; }
-      .brand img { width: 28px; height: 28px; }
-      .actions-row { flex-direction: column; gap: 11px; align-items: stretch; }
-      .action-btn { justify-content: flex-start; }
-      .cta-btn { font-size: 1.05rem; padding: 15px 0; }
-      .prompt-box { font-size: 0.96rem; padding: 15px 11px 16px 11px; }
-      .prompt-content { font-size: 0.97rem; }
-      .prompt-plus, .prompt-send { width: 28px; height: 28px; font-size: 1.08rem; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaAI - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="header">
-    <div class="brand">
-      <img src="nova-logo.png" alt="Nova" />
-      Nova
-    </div>
-    <button class="btn-login">Masuk</button>
-  </div>
-  <div class="center-logo">
-    <img src="nova-logo.png" alt="Nova" />
-  </div>
-  <div class="headline">
-    dalam hitungan detik.
-  </div>
-  <div class="subtitle">
-    Temui Nova, AI super yang benar-benar dapat menyelesaikan sesuatu.
-  </div>
-  <div class="actions-row">
-    <button class="action-btn"><span class="icon">📊</span> Buat Presentasi</button>
-    <button class="action-btn"><span class="icon">📄</span> Tulis Makalah/Esai</button>
-    <button class="action-btn arrow"><span class="icon">🧪</span> Penelitian <span style="font-size:1.4em;line-height:0.9;vertical-align:middle;">›</span></button>
-  </div>
-  <div class="prompt-box-wrap">
-    <div class="prompt-box">
-      <div class="prompt-content">
-        Buatlah esai 10 halaman tentang sejarah mekanika kuantum, sertakan kutipan, gambar, dan tabel
-      </div>
-      <div class="prompt-actions">
-        <span class="prompt-plus">+</span>
-        <span class="prompt-send">
-          <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            viewBox="0 0 24 24" style="width: 18px; height: 18px;">
-            <path d="M12 19V5M5 12l7-7 7 7"/>
-          </svg>
-        </span>
-      </div>
-    </div>
-  </div>
-  <button class="cta-btn">Try Now &nbsp;→</button>
+    <header>
+        <div class="logo-container">
+            <img src="assets/logo.png" alt="NovaAI" class="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" id="login-btn">Masuk</a></li>
+                <li><a href="#" id="register-btn">Daftar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <section class="hero">
+            <h1>Nova</h1>
+            <div class="animated-text">
+                <span class="morph-text">Membantu Anda dengan kecerdasan buatan</span>
+            </div>
+            <p>Temui Nova, AI super yang benar-benar dapat menyelesaikan sesuatu.</p>
+        </section>
+
+        <section class="features">
+            <div class="feature-card" id="generate-image">
+                <i class="fas fa-image"></i>
+                <h3>Generate Image</h3>
+                <p>Buat gambar dari teks dengan AI</p>
+            </div>
+            <div class="feature-card" id="analyze-doc">
+                <i class="fas fa-file-alt"></i>
+                <h3>Analisis Dokumen</h3>
+                <p>Analisis dan rangkum dokumen Anda</p>
+            </div>
+            <div class="feature-card" id="hd-image">
+                <i class="fas fa-camera-retro"></i>
+                <h3>HD Image</h3>
+                <p>Tingkatkan kualitas gambar</p>
+            </div>
+        </section>
+
+        <div class="chat-bubble" id="dashboard-chat">
+            <input type="text" placeholder="Tulis pertanyaan ke Nova...">
+            <div class="chat-controls">
+                <button class="btn-attach"><i class="fas fa-plus"></i></button>
+                <button class="btn-send"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

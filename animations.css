@@ -1,0 +1,112 @@
+/* Text Morph Animation */
+.animated-text {
+    height: 60px;
+    overflow: hidden;
+    margin: 1rem auto;
+}
+
+.morph-text {
+    display: inline-block;
+    animation: morph 8s infinite;
+    opacity: 0;
+    position: relative;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.morph-text:nth-child(1) {
+    animation-delay: 0s;
+}
+.morph-text:nth-child(2) {
+    animation-delay: 2s;
+}
+.morph-text:nth-child(3) {
+    animation-delay: 4s;
+}
+.morph-text:nth-child(4) {
+    animation-delay: 6s;
+}
+
+@keyframes morph {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    30% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Feature Card Animation */
+.feature-card {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.feature-card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+.feature-card:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.feature-card:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Chat Message Animation */
+.message {
+    animation: messageIn 0.3s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+@keyframes messageIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Quick Features Fade Out */
+.quick-features.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+        height: 0;
+        margin: 0;
+        padding: 0;
+    }
+}
