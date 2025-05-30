@@ -22,29 +22,28 @@
       background-size: cover;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
     .header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 40px 40px 0 40px;
+      padding: 32px 6vw 0 6vw;
     }
     .logo {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 700;
       margin-top: 0;
       letter-spacing: 0.5px;
       color: #fff;
     }
     .login-btn {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       font-weight: 500;
       background: #232323;
       color: #fff;
       border: 2px solid #fff;
       border-radius: 40px;
-      padding: 10px 36px;
+      padding: 8px 26px;
       cursor: pointer;
       outline: none;
       transition: background 0.2s;
@@ -56,19 +55,19 @@
       background: #444;
     }
     .main {
-      flex: 1;
+      width: 100vw;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      margin-top: 12px;
     }
-    /* Container to layer purple glow and logo */
     .logo-container {
       position: relative;
-      width: 350px;
-      height: 350px;
-      margin-bottom: 24px;
-      margin-top: 10px;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 14px;
+      margin-top: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -76,9 +75,9 @@
     .purple-glow {
       position: absolute;
       top: 50%; left: 50%;
-      width: 270px;   /* Ukuran bulatan ungu tetap */
-      height: 270px;
-      background: radial-gradient(circle, rgba(128,38,242,0.4), rgba(28,0,56,0.1) 80%);
+      width: 170px;
+      height: 170px;
+      background: radial-gradient(circle, rgba(128,38,242,0.35), rgba(28,0,56,0.10) 80%);
       border-radius: 50%;
       transform: translate(-50%, -50%);
       z-index: 1;
@@ -86,40 +85,44 @@
     }
     .logo-img {
       position: relative;
-      width: 350px;
-      height: 350px;
+      width: 130px;
+      height: 130px;
       object-fit: contain;
       border-radius: 50%;
       background: transparent;
-      box-shadow: 0 0 25px 8px rgba(60,0,120,0.3);
+      box-shadow: 0 0 18px 5px rgba(60,0,120,0.17);
       z-index: 2;
     }
     .main h1 {
-      font-size: 2.5rem;
+      font-size: 2.1rem;
       font-weight: 700;
-      margin: 0 0 32px 0;
+      margin: 0 0 12px 0;
       text-align: center;
       letter-spacing: 0.5px;
     }
     .main h2 {
-      font-size: 2.1rem;
+      font-size: 1.35rem;
       font-weight: 600;
-      margin: 0 0 18px 0;
+      margin: 0 0 16px 0;
       text-align: center;
       letter-spacing: 0.5px;
     }
     .chatbox-container {
-      width: 90vw;
-      max-width: 700px;
-      margin: 0 auto 20px auto;
+      width: 97vw;
+      max-width: 420px;
+      margin: 0 auto 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .chatbox {
       background: #232323;
-      border: 2px solid #fff;
-      border-radius: 48px;
-      min-height: 180px;
+      border: 1px solid #fff;
+      border-radius: 32px;
+      min-height: 52px;
       width: 100%;
-      padding: 32px 32px 32px 32px;
+      max-width: 420px;
+      padding: 18px 20px 18px 20px;
       display: flex;
       align-items: flex-end;
       position: relative;
@@ -127,42 +130,44 @@
     }
     .send-btn {
       position: absolute;
-      right: 24px;
-      bottom: 24px;
-      width: 48px;
-      height: 48px;
+      right: 14px;
+      bottom: 14px;
+      width: 38px;
+      height: 38px;
       background: transparent;
-      border: 2px solid #fff;
+      border: 1px solid #fff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: background 0.2s;
+      z-index: 3;
     }
     .send-btn:hover {
       background: #444;
     }
     .send-btn svg {
-      width: 26px;
-      height: 26px;
+      width: 22px;
+      height: 22px;
       color: #fff;
     }
     .suggestions {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 18px;
-      margin: 18px 0 0 0;
+      gap: 10px;
+      margin: 10px 0 0 0;
+      width: 100%;
     }
     .suggestion-btn {
-      font-size: 1.5rem;
+      font-size: 1.05rem;
       font-weight: 600;
       background: #232323;
       color: #fff;
-      border: 2px solid #fff;
+      border: 1px solid #fff;
       border-radius: 40px;
-      padding: 10px 36px;
+      padding: 7px 22px;
       cursor: pointer;
       outline: none;
       transition: background 0.2s, color 0.2s;
@@ -176,39 +181,113 @@
     .footer {
       width: 100vw;
       text-align: center;
-      font-size: 1.25rem;
+      font-size: 1.06rem;
       color: #ccc;
-      padding-bottom: 24px;
+      padding-bottom: 18px;
       letter-spacing: 0.2px;
       font-weight: 500;
+      margin-top: 12px;
     }
-    @media (max-width: 600px) {
+    /* Desktop adjustments */
+    @media (min-width: 601px) {
       .header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 28px 16px 0 16px;
+        padding: 38px 10vw 0 10vw;
       }
-      .main h1, .main h2 {
+      .logo-container {
+        width: 320px;
+        height: 320px;
+      }
+      .purple-glow {
+        width: 270px;
+        height: 270px;
+      }
+      .logo-img {
+        width: 220px;
+        height: 220px;
+      }
+      .main h1 {
+        font-size: 2.5rem;
+      }
+      .main h2 {
         font-size: 1.55rem;
       }
       .chatbox-container {
-        width: 96vw;
+        max-width: 430px;
+        margin-bottom: 22px;
       }
-      .footer {
-        font-size: 1rem;
-        padding-bottom: 14px;
+      .chatbox {
+        border-radius: 38px;
+        padding: 22px 24px 22px 24px;
+        min-height: 58px;
+        max-width: 430px;
+      }
+      .send-btn {
+        width: 46px;
+        height: 46px;
+        right: 18px;
+        bottom: 18px;
+      }
+      .send-btn svg {
+        width: 28px;
+        height: 28px;
+      }
+      .suggestions {
+        gap: 18px;
+      }
+      .suggestion-btn {
+        font-size: 1.15rem;
+        padding: 9px 32px;
+      }
+    }
+    @media (max-width: 420px) {
+      .header {
+        padding: 22px 2vw 0 2vw;
       }
       .logo-container {
-        width: 150px;
-        height: 150px;
+        width: 135px;
+        height: 135px;
       }
       .purple-glow {
-        width: 115px;
-        height: 115px;
+        width: 100px;
+        height: 100px;
       }
       .logo-img {
-        width: 150px;
-        height: 150px;
+        width: 70px;
+        height: 70px;
+      }
+      .main h1 {
+        font-size: 1.25rem;
+      }
+      .main h2 {
+        font-size: 1rem;
+      }
+      .chatbox-container {
+        width: 97vw;
+        max-width: 99vw;
+      }
+      .chatbox {
+        font-size: 0.95rem;
+        border-radius: 22px;
+        padding: 12px 10px 12px 14px;
+        min-height: 40px;
+      }
+      .send-btn {
+        width: 28px;
+        height: 28px;
+        right: 7px;
+        bottom: 7px;
+      }
+      .send-btn svg {
+        width: 15px;
+        height: 15px;
+      }
+      .footer {
+        font-size: 0.9rem;
+        padding-bottom: 10px;
+      }
+      .suggestion-btn {
+        font-size: 0.95rem;
+        padding: 6px 14px;
       }
     }
   </style>
@@ -227,7 +306,7 @@
     <h2>I cant help you?</h2>
     <div class="chatbox-container">
       <div class="chatbox">
-        <!-- Simulasi area chat kosong -->
+        <!-- Area chat kosong -->
         <button class="send-btn" aria-label="Send">
           <!-- Arrow Up SVG Icon -->
           <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -238,9 +317,7 @@
       <div class="suggestions">
         <button class="suggestion-btn">Apa itu AI?</button>
         <button class="suggestion-btn">AI Deepseek</button>
-      </div>
-      <div class="suggestions" style="margin-top: 10px;">
-        <button class="suggestion-btn" style="margin: auto;">AI ChatGpt</button>
+        <button class="suggestion-btn">AI ChatGpt</button>
       </div>
     </div>
   </div>
